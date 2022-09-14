@@ -7,14 +7,30 @@ import {
   UsergroupAddOutlined,
 } from "@ant-design/icons";
 import { Button, Menu } from "antd";
-import React, { useState } from "react";
+import moment from "moment";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Space, Typography, DatePicker, List } from "antd";
+import { Chart, registerables } from "chart.js";
+import { Line } from "react-chartjs-2";
+
 import { Col, Row } from "antd";
 import { Card } from "antd";
 import { Divider } from "antd";
+import {
+  collection,
+  getDocs,
+  orderBy,
+  query,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+import { db, db2 } from "../../firebase-config.js";
 
 import { useNavigate } from "react-router-dom";
+Chart.register(...registerables);
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
@@ -29,12 +45,29 @@ function getItem(label, key, icon, children, type) {
     type,
   };
 }
+function checkCondition(sys, dia) {
+  if (sys <= 90 || dia <= 60) return "Low";
+  else if (sys <= 120 || dia <= 80) return "Normal";
+  else if (sys > 120 || dia > 80) return " High blood pressure";
+}
 
 const items = [
   getItem("Home", "1", <PieChartOutlined />),
   getItem("History", "2", <ReconciliationOutlined />),
   getItem("Family", "3", <UsergroupAddOutlined />),
 ];
+const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "top",
+    },
+    title: {
+      display: false,
+      text: "Time series",
+    },
+  },
+};
 const data = [
   {
     title: "Title 1",
@@ -58,6 +91,38 @@ const data = [
     title: "Title 4",
   },
 ];
+const labels = [
+  "23:42:48",
+  "23:46:16",
+  "00:13:23",
+  "20:03:41",
+  "20:04:45",
+  "22:22:55",
+];
+
+const data2 = {
+  labels,
+  datasets: [
+    {
+      label: "SYS",
+      data: [123, 123, 123, 123, 60, 60],
+      borderColor: "rgb(126, 229, 0)",
+      backgroundColor: "rgba(126, 229, 0, 0.5)",
+    },
+    {
+      label: "DIA",
+      data: [91, 91, 12, 75, 85, 85],
+      borderColor: "rgb(53, 162, 235)",
+      backgroundColor: "rgba(53, 162, 235, 0.5)",
+    },
+    {
+      label: "Heart rate",
+      data: [43, 43, 43, 43, 43, 43],
+      borderColor: "rgb(255, 99, 132)",
+      backgroundColor: "rgba(255, 99, 132, 0.5)",
+    },
+  ],
+};
 const records = [
   {
     id: "1",
@@ -193,8 +258,20 @@ const records = [
 ];
 const History = () => {
   const [collapsed, setCollapsed] = useState(true);
-  let navigate = useNavigate();
+  const [record, setRecord] = useState([]);
 
+  let navigate = useNavigate();
+  const historyCollectionRef = collection(db2, "history");
+  const q = query(historyCollectionRef, orderBy("insert_at", "desc"));
+
+  useEffect(() => {
+    const getUsers = async () => {
+      const data = await getDocs(q);
+      setRecord(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+
+    getUsers();
+  }, []);
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
@@ -241,30 +318,62 @@ const History = () => {
           <Title level={2}>History</Title>
         </div>
         <Divider />
-        <div style={{ marginTop: "10px", marginLeft: "10px", width: "80%" }}>
+        <div
+          style={{
+            marginTop: "10px",
+            marginLeft: "10px",
+            width: "80%",
+            minWidth: "300px",
+            border: "1px solid",
+          }}
+        >
+          <Line options={options} data={data2} />
+        </div>
+        <div style={{ marginTop: "30px", marginLeft: "10px", width: "80%" }}>
           <RangePicker
             onFocus={(e) => {
               console.log(e);
             }}
           />
         </div>
-        <div style={{ marginTop: "10px", marginLeft: "10px", width: "85%" }}>
+        <div style={{ marginTop: "30px", marginLeft: "10px", width: "85%" }}>
           <List
             grid={{
               gutter: 16,
               column: 1,
             }}
-            dataSource={records}
+            dataSource={record}
             renderItem={(item) => (
               <List.Item>
                 <Card>
-                  <Meta title={item.date} description={item.hour} />
+                  <Meta
+                    title={moment
+                      .unix(item.insert_at.seconds)
+                      .format("DD/MM/YYYY")}
+                    description={moment
+                      .unix(item.insert_at.seconds)
+                      .format("HH:mm:ss")}
+                  />
                   <Divider></Divider>
                   <p>SYS: {item.sys}</p>
                   <p>DIA: {item.dia}</p>
-                  <p>Heart rate: {item.heartrate}</p>
-
-                  <p>Status: {item.status}</p>
+                  <p>Heart rate: {item.heart_rate}</p>
+                  <p>
+                    Status:{" "}
+                    <span
+                      style={{
+                        color:
+                          checkCondition(item.sys, item.dia) === "Low"
+                            ? "#7e22ff"
+                            : checkCondition(item.sys, item.dia) === "Normal"
+                            ? "#a7e519"
+                            : "#a7e519",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {checkCondition(item.sys, item.dia)}
+                    </span>
+                  </p>
                 </Card>
               </List.Item>
             )}

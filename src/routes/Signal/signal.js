@@ -16,10 +16,22 @@ import { Col, Row } from "antd";
 import { Card } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ref, onValue, push, update, remove } from "firebase/database";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 // import database from '@react-native-firebase/database';
-import { db } from "../../firebase-config.js";
+import { db, db2 } from "../../firebase-config.js";
 const { Text, Link } = Typography;
-
+function checkCondition(sys, dia) {
+  if (sys <= 90 || dia <= 60) return "Low";
+  else if (sys <= 120 || dia <= 80) return "Normal";
+  else if (sys > 120 || dia > 80) return " High blood pressure";
+}
 function getItem(label, key, icon, children, type) {
   return {
     key,
@@ -48,12 +60,28 @@ let options = {
 
 const Signal = () => {
   const [collapsed, setCollapsed] = useState(true);
+  const [record, setRecord] = useState({
+    sys: 0,
+    dia: 0,
+    heartRate: 0,
+    insertAt: "",
+  });
   let navigate = useNavigate();
   const [data, setData] = useState({
     Signal1: 0,
     Signal2: 0,
     Signal3: 0,
   });
+  const historyCollectionRef = collection(db2, "history");
+  const saveRecord = async (data) => {
+    await addDoc(historyCollectionRef, {
+      dia: data.Signal1,
+      sys: data.Signal2,
+      heart_rate: data.Signal3,
+      insert_at: new Date(),
+    });
+    console.log(saveRecord);
+  };
   useEffect(() => {
     return onValue(
       ref(db, "/UsersData/tbtz8pfqGzfks9jL9iEKz151OVp1"),
@@ -156,13 +184,42 @@ const Signal = () => {
             <p>SYS: {data.Signal1}</p>
             <p>DIA: {data.Signal2}</p>
             <p>Heart rate: {data.Signal3}</p>
+            <div>
+              <p>
+                Status:{" "}
+                <span
+                  style={{
+                    color:
+                      checkCondition(data.Signal1, data.Signal2) === "Low"
+                        ? "#7e22ff"
+                        : checkCondition(data.Signal1, data.Signal2) ===
+                          "Normal"
+                        ? "#a7e519"
+                        : "#a7e519",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {checkCondition(data.Signal1, data.Signal2)}
+                </span>
+              </p>
+            </div>
           </Card>
           <Button
             style={{ width: "40%", margin: "20px auto" }}
             type="primary"
             size="small"
+            onClick={() => {
+              console.log(data);
+              // setRecord({
+              //   dia: data.Signal1,
+              //   sys: data.Signal2,
+              //   heartRate: data.Signal3,
+              //   insertAt: new Date(),
+              // });
+              saveRecord(data);
+            }}
           >
-            Calculate
+            Save
           </Button>
         </div>
       </div>
