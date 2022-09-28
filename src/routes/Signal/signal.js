@@ -8,7 +8,7 @@ import {
   UsergroupAddOutlined,
   SwapOutlined,
 } from "@ant-design/icons";
-import { Button, Menu } from "antd";
+import { Button, Menu, Select, Timeline, Input } from "antd";
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Space, Typography } from "antd";
@@ -27,6 +27,8 @@ import {
 // import database from '@react-native-firebase/database';
 import { db, db2 } from "../../firebase-config.js";
 const { Text, Link } = Typography;
+const { Option } = Select;
+
 function checkCondition(sys, dia) {
   if (sys <= 90 || dia <= 60) return "Low";
   else if (sys <= 120 || dia <= 80) return "Normal";
@@ -72,6 +74,9 @@ const Signal = () => {
     Signal2: 0,
     Signal3: 0,
   });
+  const handleChange = (value) => {
+    console.log(`selected ${value}`);
+  };
   const historyCollectionRef = collection(db2, "history");
   const saveRecord = async (data) => {
     await addDoc(historyCollectionRef, {
@@ -133,7 +138,13 @@ const Signal = () => {
           }}
         />
       </div>
-      <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <div
           style={{
             marginTop: "10px",
@@ -172,21 +183,53 @@ const Signal = () => {
             margin: "30px 10px",
             display: "flex",
             flexDirection: "column",
+            alignItems: "center",
           }}
         >
           <Card
             bordered={false}
             style={{
               boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-              minWidth: 200,
+              minWidth: 272,
+              maxWidth: 600,
+              marginBottom: "20px",
             }}
           >
-            <p>SYS: {data.Signal1}</p>
-            <p>DIA: {data.Signal2}</p>
-            <p>Heart rate: {data.Signal3}</p>
-            <div>
+            <p>
+              <span style={{ fontSize: "18px", fontWeight: 800 }}>SYS:</span>{" "}
+              <span style={{ fontSize: "18px" }}>{data.Signal1}</span>
+            </p>
+            <p>
+              <span style={{ fontSize: "18px", fontWeight: 800 }}>DIA:</span>{" "}
+              <span style={{ fontSize: "18px" }}>{data.Signal2}</span>
+            </p>
+            <p>
+              <span style={{ fontSize: "18px", fontWeight: 800 }}>
+                Heart rate:
+              </span>{" "}
+              <span style={{ fontSize: "18px" }}>{data.Signal3}</span>
+            </p>
+            <div style={{ display: "flex", alignItems: "center" }}>
               <p>
-                Status:{" "}
+                <span style={{ fontSize: "18px", fontWeight: 800 }}>
+                  Status:
+                </span>{" "}
+                <span
+                  style={{
+                    height: "10px",
+                    width: "10px",
+                    fontWeight: "bold",
+                    backgroundColor:
+                      checkCondition(data.Signal1, data.Signal2) === "Low"
+                        ? "#7e22ff"
+                        : checkCondition(data.Signal1, data.Signal2) ===
+                          "Normal"
+                        ? "#a7e519"
+                        : "#EE2727",
+                    borderRadius: "50%",
+                    display: "inline-block",
+                  }}
+                ></span>{" "}
                 <span
                   style={{
                     color:
@@ -197,6 +240,7 @@ const Signal = () => {
                         ? "#a7e519"
                         : "#a7e519",
                     fontWeight: "bold",
+                    fontSize: "20px",
                   }}
                 >
                   {checkCondition(data.Signal1, data.Signal2)}
@@ -204,8 +248,83 @@ const Signal = () => {
               </p>
             </div>
           </Card>
+          <Timeline style={{}}>
+            <Timeline.Item>
+              <Card
+                bordered={false}
+                title="Age"
+                style={{
+                  boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                  minWidth: 240,
+                  maxWidth: 600,
+                }}
+              >
+                <Input
+                  placeholder="Please write your age"
+                  name="age"
+                  type="number"
+                  style={{
+                    width: 180,
+                  }}
+                />
+              </Card>
+            </Timeline.Item>
+            <Timeline.Item>
+              <Card
+                bordered={false}
+                title="Gender"
+                style={{
+                  boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                  minWidth: 240,
+                  maxWidth: 600,
+                }}
+              >
+                <Select
+                  defaultValue=""
+                  style={{
+                    width: 180,
+                  }}
+                  onChange={handleChange}
+                >
+                  <Option value="" disabled selected hidden>
+                    Select Gender
+                  </Option>
+                  <Option value="male">Male</Option>
+                  <Option value="female">Female</Option>
+                </Select>
+              </Card>
+            </Timeline.Item>
+            <Timeline.Item>
+              <Card
+                bordered={false}
+                title="Condition"
+                style={{
+                  boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                  minWidth: 240,
+                  maxWidth: 600,
+                }}
+              >
+                <Select
+                  defaultValue="normal"
+                  style={{
+                    width: 180,
+                  }}
+                  onChange={handleChange}
+                >
+                  <Option value="normal">Normal</Option>
+                  <Option value="good">Good</Option>
+                  <Option value="bad">Bad</Option>
+                  <Option value="stressed">Stressed</Option>
+                  <Option value="troubleeating">Trouble Eating</Option>
+                  <Option value="drunk">Drunk</Option>
+                  <Option value="smoked">Smoked</Option>
+                </Select>
+              </Card>
+            </Timeline.Item>
+          </Timeline>
+
           <Button
-            style={{ width: "40%", margin: "20px auto" }}
+            style={{ width: "40%", margin: "20px auto", maxWidth: 120 }}
             type="primary"
             size="small"
             onClick={() => {

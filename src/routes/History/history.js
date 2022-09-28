@@ -367,10 +367,11 @@ const History = () => {
                             ? "#7e22ff"
                             : checkCondition(item.sys, item.dia) === "Normal"
                             ? "#a7e519"
-                            : "#a7e519",
+                            : "#EE2727",
                         fontWeight: "bold",
                       }}
                     >
+                      {console.log(checkCondition(item.sys, item.dia))}
                       {checkCondition(item.sys, item.dia)}
                     </span>
                   </p>
