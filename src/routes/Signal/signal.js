@@ -225,7 +225,7 @@ const Signal = () => {
                         : checkCondition(data.Signal1, data.Signal2) ===
                           "Normal"
                         ? "#a7e519"
-                        : "#a7e519",
+                        : "#EE2727",
                     borderRadius: "50%",
                     display: "inline-block",
                   }}
