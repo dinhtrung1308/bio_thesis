@@ -8,11 +8,16 @@ import {
   UsergroupAddOutlined,
   SwapOutlined,
 } from "@ant-design/icons";
-import { Button, Menu, Select, Timeline, Input } from "antd";
+import { Button, Menu, Select, Timeline, Input, Modal } from "antd";
+import {
+  HeartFilled,
+  InfoCircleFilled,
+  ExclamationCircleOutlined,
+} from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Space, Typography } from "antd";
-import { Col, Row } from "antd";
+import { Col, Row, Image } from "antd";
 import { Card } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ref, onValue, push, update, remove } from "firebase/database";
@@ -26,6 +31,9 @@ import {
 } from "firebase/firestore";
 // import database from '@react-native-firebase/database';
 import { db, db2 } from "../../firebase-config.js";
+import useWindowDimensions from "../../hook/useWindowHook";
+import informationImage from "../../assets/img/information.png";
+import Title from "antd/lib/skeleton/Title";
 const { Text, Link } = Typography;
 const { Option } = Select;
 
@@ -43,6 +51,7 @@ function getItem(label, key, icon, children, type) {
     type,
   };
 }
+const { confirm } = Modal;
 
 const items = [
   getItem("Home", "1", <PieChartOutlined />),
@@ -74,6 +83,8 @@ const Signal = () => {
     Signal2: 0,
     Signal3: 0,
   });
+  const { height, width } = useWindowDimensions();
+  console.log(height, width);
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
@@ -107,6 +118,17 @@ const Signal = () => {
       navigate("/relatives");
     }
   }
+  const showConfirm = (data) => {
+    confirm({
+      title: "Do you want to save?",
+      icon: <ExclamationCircleOutlined />,
+      // content: "Some descriptions",
+      onOk() {
+        saveRecord(data);
+      },
+      onCancel() {},
+    });
+  };
 
   return (
     <div className="signal-layout">
@@ -178,169 +200,481 @@ const Signal = () => {
             Find Devices
           </Button>
         </div>
-        <div
-          style={{
-            margin: "30px 10px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Card
-            bordered={false}
+        {width < 750 && (
+          <div
             style={{
-              boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-              minWidth: 272,
-              maxWidth: 600,
-              marginBottom: "20px",
+              margin: "30px 10px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
-            <p>
-              <span style={{ fontSize: "18px", fontWeight: 800 }}>SYS:</span>{" "}
-              <span style={{ fontSize: "18px" }}>{data.Signal1}</span>
-            </p>
-            <p>
-              <span style={{ fontSize: "18px", fontWeight: 800 }}>DIA:</span>{" "}
-              <span style={{ fontSize: "18px" }}>{data.Signal2}</span>
-            </p>
-            <p>
-              <span style={{ fontSize: "18px", fontWeight: 800 }}>
-                Heart rate:
-              </span>{" "}
-              <span style={{ fontSize: "18px" }}>{data.Signal3}</span>
-            </p>
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <Card
+              bordered={false}
+              style={{
+                boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                minWidth: 272,
+                maxWidth: 600,
+                marginBottom: "20px",
+              }}
+            >
+              <p>
+                <span style={{ fontSize: "18px", fontWeight: 800 }}>SYS:</span>{" "}
+                <span style={{ fontSize: "18px" }}>{data.Signal1}</span>
+              </p>
+              <p>
+                <span style={{ fontSize: "18px", fontWeight: 800 }}>DIA:</span>{" "}
+                <span style={{ fontSize: "18px" }}>{data.Signal2}</span>
+              </p>
               <p>
                 <span style={{ fontSize: "18px", fontWeight: 800 }}>
-                  Status:
+                  Heart rate:
                 </span>{" "}
-                <span
-                  style={{
-                    height: "10px",
-                    width: "10px",
-                    fontWeight: "bold",
-                    backgroundColor:
-                      checkCondition(data.Signal1, data.Signal2) === "Low"
-                        ? "#7e22ff"
-                        : checkCondition(data.Signal1, data.Signal2) ===
-                          "Normal"
-                        ? "#a7e519"
-                        : "#EE2727",
-                    borderRadius: "50%",
-                    display: "inline-block",
-                  }}
-                ></span>{" "}
-                <span
-                  style={{
-                    color:
-                      checkCondition(data.Signal1, data.Signal2) === "Low"
-                        ? "#7e22ff"
-                        : checkCondition(data.Signal1, data.Signal2) ===
-                          "Normal"
-                        ? "#a7e519"
-                        : "#a7e519",
-                    fontWeight: "bold",
-                    fontSize: "20px",
-                  }}
-                >
-                  {checkCondition(data.Signal1, data.Signal2)}
-                </span>
+                <span style={{ fontSize: "18px" }}>{data.Signal3}</span>
               </p>
-            </div>
-          </Card>
-          <Timeline style={{}}>
-            <Timeline.Item>
-              <Card
-                bordered={false}
-                title="Age"
-                style={{
-                  boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-                  minWidth: 240,
-                  maxWidth: 600,
-                }}
-              >
-                <Input
-                  placeholder="Please write your age"
-                  name="age"
-                  type="number"
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <p>
+                  <span style={{ fontSize: "18px", fontWeight: 800 }}>
+                    Status:
+                  </span>{" "}
+                  <span
+                    style={{
+                      height: "10px",
+                      width: "10px",
+                      fontWeight: "bold",
+                      backgroundColor:
+                        checkCondition(data.Signal1, data.Signal2) === "Low"
+                          ? "#7e22ff"
+                          : checkCondition(data.Signal1, data.Signal2) ===
+                            "Normal"
+                          ? "#a7e519"
+                          : "#EE2727",
+                      borderRadius: "50%",
+                      display: "inline-block",
+                    }}
+                  ></span>{" "}
+                  <span
+                    style={{
+                      color:
+                        checkCondition(data.Signal1, data.Signal2) === "Low"
+                          ? "#7e22ff"
+                          : checkCondition(data.Signal1, data.Signal2) ===
+                            "Normal"
+                          ? "#a7e519"
+                          : "#a7e519",
+                      fontWeight: "bold",
+                      fontSize: "20px",
+                    }}
+                  >
+                    {checkCondition(data.Signal1, data.Signal2)}
+                  </span>
+                </p>
+              </div>
+            </Card>
+            <Timeline style={{}}>
+              <Timeline.Item>
+                <Card
+                  bordered={false}
+                  title="Age"
                   style={{
-                    width: 180,
+                    boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                    minWidth: 240,
+                    maxWidth: 600,
                   }}
-                />
-              </Card>
-            </Timeline.Item>
-            <Timeline.Item>
-              <Card
-                bordered={false}
-                title="Gender"
-                style={{
-                  boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-                  minWidth: 240,
-                  maxWidth: 600,
-                }}
-              >
-                <Select
-                  defaultValue=""
-                  style={{
-                    width: 180,
-                  }}
-                  onChange={handleChange}
                 >
-                  <Option value="" disabled selected hidden>
-                    Select Gender
-                  </Option>
-                  <Option value="male">Male</Option>
-                  <Option value="female">Female</Option>
-                </Select>
-              </Card>
-            </Timeline.Item>
-            <Timeline.Item>
-              <Card
-                bordered={false}
-                title="Condition"
-                style={{
-                  boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-                  minWidth: 240,
-                  maxWidth: 600,
-                }}
-              >
-                <Select
-                  defaultValue="normal"
+                  <Input
+                    placeholder="Please write your age"
+                    name="age"
+                    type="number"
+                    style={{
+                      width: 180,
+                    }}
+                  />
+                </Card>
+              </Timeline.Item>
+              <Timeline.Item>
+                <Card
+                  bordered={false}
+                  title="Gender"
                   style={{
-                    width: 180,
+                    boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                    minWidth: 240,
+                    maxWidth: 600,
                   }}
-                  onChange={handleChange}
                 >
-                  <Option value="normal">Normal</Option>
-                  <Option value="good">Good</Option>
-                  <Option value="bad">Bad</Option>
-                  <Option value="stressed">Stressed</Option>
-                  <Option value="troubleeating">Trouble Eating</Option>
-                  <Option value="drunk">Drunk</Option>
-                  <Option value="smoked">Smoked</Option>
-                </Select>
-              </Card>
-            </Timeline.Item>
-          </Timeline>
+                  <Select
+                    defaultValue=""
+                    style={{
+                      width: 180,
+                    }}
+                    onChange={handleChange}
+                  >
+                    <Option value="" disabled selected hidden>
+                      Select Gender
+                    </Option>
+                    <Option value="male">Male</Option>
+                    <Option value="female">Female</Option>
+                  </Select>
+                </Card>
+              </Timeline.Item>
+              <Timeline.Item>
+                <Card
+                  bordered={false}
+                  title="Condition"
+                  style={{
+                    boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                    minWidth: 240,
+                    maxWidth: 600,
+                  }}
+                >
+                  <Select
+                    defaultValue="normal"
+                    style={{
+                      width: 180,
+                    }}
+                    onChange={handleChange}
+                  >
+                    <Option value="normal">Normal</Option>
+                    <Option value="good">Good</Option>
+                    <Option value="bad">Bad</Option>
+                    <Option value="stressed">Stressed</Option>
+                    <Option value="troubleeating">Trouble Eating</Option>
+                    <Option value="drunk">Drunk</Option>
+                    <Option value="smoked">Smoked</Option>
+                  </Select>
+                </Card>
+              </Timeline.Item>
+            </Timeline>
 
-          <Button
-            style={{ width: "40%", margin: "20px auto", maxWidth: 120 }}
-            type="primary"
-            size="small"
-            onClick={() => {
-              console.log(data);
-              // setRecord({
-              //   dia: data.Signal1,
-              //   sys: data.Signal2,
-              //   heartRate: data.Signal3,
-              //   insertAt: new Date(),
-              // });
-              saveRecord(data);
-            }}
-          >
-            Save
-          </Button>
-        </div>
+            <Button
+              style={{ width: "40%", margin: "20px auto", maxWidth: 120 }}
+              type="primary"
+              size="small"
+              onClick={() => {
+                console.log(data);
+                // setRecord({
+                //   dia: data.Signal1,
+                //   sys: data.Signal2,
+                //   heartRate: data.Signal3,
+                //   insertAt: new Date(),
+                // });
+                saveRecord(data);
+              }}
+            >
+              Save
+            </Button>
+          </div>
+        )}
+        {width >= 750 && (
+          <Row style={{ marginBottom: "40px", padding: "40px" }}>
+            <Col xs={24} sm={24} md={24} lg={24}>
+              <Typography.Title level={2}> User profile</Typography.Title>
+            </Col>
+            <Col xs={12} sm={12} md={24} lg={24}>
+              <Card
+                bordered={true}
+                style={{
+                  boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                  marginBottom: "20px",
+                  borderRadius: " 40px 0px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "30px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "68px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography>Age :</Typography>
+                      <Input
+                        placeholder="Please write your age"
+                        name="age"
+                        type="number"
+                        style={{
+                          width: 180,
+                        }}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "45px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography>Gender :</Typography>
+                      <Select
+                        defaultValue=""
+                        style={{
+                          width: 180,
+                        }}
+                        onChange={handleChange}
+                      >
+                        <Option value="" disabled selected hidden>
+                          Select Gender
+                        </Option>
+                        <Option value="male">Male</Option>
+                        <Option value="female">Female</Option>
+                      </Select>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "30px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography>Condition :</Typography>
+
+                      <Select
+                        defaultValue="normal"
+                        style={{
+                          width: 180,
+                        }}
+                        onChange={handleChange}
+                      >
+                        <Option value="normal">Normal</Option>
+                        <Option value="good">Good</Option>
+                        <Option value="bad">Bad</Option>
+                        <Option value="stressed">Stressed</Option>
+                        <Option value="troubleeating">Trouble Eating</Option>
+                        <Option value="drunk">Drunk</Option>
+                        <Option value="smoked">Smoked</Option>
+                      </Select>
+                    </div>
+                  </div>
+                  <div>
+                    <Image width={200} src={informationImage} />
+                  </div>
+                </div>
+              </Card>
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={24}>
+              <Typography.Title level={2}> Statistics</Typography.Title>
+            </Col>
+
+            <Col xs={8} sm={8} md={8} lg={8}>
+              <Card
+                bordered={true}
+                style={{
+                  boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                  marginBottom: "20px",
+                  borderRadius: " 30px",
+                  height: "250px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "unset",
+                      gap: "20px ",
+                    }}
+                  >
+                    <HeartFilled
+                      style={{
+                        color: "#FA3B3B",
+                        fontSize: "30px",
+                      }}
+                    />
+                    <Typography.Title level={4}> Heart rate:</Typography.Title>
+                  </div>
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <Typography.Title
+                      level={1}
+                      style={{ color: "#EA1F1F", fontWeight: "800" }}
+                    >
+                      {data.Signal3}
+                    </Typography.Title>
+                    <Typography.Title
+                      level={5}
+                      style={{ color: "#EA1F1F", fontWeight: "800" }}
+                    >
+                      (bmp)
+                    </Typography.Title>
+                  </div>
+                </div>
+              </Card>
+            </Col>
+            <Col xs={1} sm={1} md={1} lg={1}></Col>
+            <Col xs={9} sm={9} md={9} lg={9}>
+              <Card
+                bordered={true}
+                style={{
+                  boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                  marginBottom: "20px",
+                  borderRadius: " 30px",
+                  height: "250px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "baseline",
+                      gap: "20px ",
+                    }}
+                  >
+                    <Typography.Title level={4}> SYS:</Typography.Title>
+                    <Typography.Title level={2}>
+                      {data.Signal1}
+                    </Typography.Title>
+                    <Typography.Title level={2}>{"mmHg"}</Typography.Title>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "baseline",
+                      gap: "20px ",
+                    }}
+                  >
+                    <Typography.Title level={4}> DIA:</Typography.Title>
+                    <Typography.Title level={2}>
+                      {data.Signal2}
+                    </Typography.Title>
+                    <Typography.Title level={2}>{"mmHg"}</Typography.Title>
+                  </div>
+                </div>
+              </Card>
+            </Col>
+            <Col xs={1} sm={1} md={1} lg={1}></Col>
+            <Col xs={5} sm={5} md={5} lg={5}>
+              <Card
+                bordered={true}
+                style={{
+                  boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                  marginBottom: "20px",
+                  borderRadius: " 30px",
+                  height: "250px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: " space-around",
+                      alignItems: "baseline",
+                      width: "100%",
+                      gap: "20px ",
+                    }}
+                  >
+                    {/* <SmileTwoTone style={{ fontSize: "30px" }} /> */}
+                    <Typography.Title level={4}> Status:</Typography.Title>
+                    <InfoCircleFilled style={{ fontSize: "20px" }} />
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span
+                      style={{
+                        height: "10px",
+                        width: "10px",
+                        fontWeight: "bold",
+                        backgroundColor:
+                          checkCondition(data.Signal1, data.Signal2) === "Low"
+                            ? "#7e22ff"
+                            : checkCondition(data.Signal1, data.Signal2) ===
+                              "Normal"
+                            ? "#a7e519"
+                            : "#EE2727",
+                        borderRadius: "50%",
+                        display: "inline-block",
+                      }}
+                    ></span>{" "}
+                    <span
+                      style={{
+                        color:
+                          checkCondition(data.Signal1, data.Signal2) === "Low"
+                            ? "#7e22ff"
+                            : checkCondition(data.Signal1, data.Signal2) ===
+                              "Normal"
+                            ? "#a7e519"
+                            : "#EE2727",
+                        fontWeight: "bold",
+                        fontSize: "20px",
+                      }}
+                    >
+                      {checkCondition(data.Signal1, data.Signal2)}
+                    </span>
+                  </div>
+                </div>
+              </Card>
+            </Col>
+            <Button
+              style={{
+                width: "40%",
+                margin: "20px auto",
+                maxWidth: 120,
+                height: "50px",
+                borderRadius: "40px",
+              }}
+              type="primary"
+              size="small"
+              onClick={() => {
+                console.log(data);
+                // setRecord({
+                //   dia: data.Signal1,
+                //   sys: data.Signal2,
+                //   heartRate: data.Signal3,
+                //   insertAt: new Date(),
+                // });
+                // saveRecord(data);
+                showConfirm(data);
+              }}
+            >
+              Save
+            </Button>
+          </Row>
+        )}
       </div>
     </div>
   );
