@@ -36,10 +36,9 @@ import informationImage from "../../assets/img/information.png";
 import Title from "antd/lib/skeleton/Title";
 const { Text, Link } = Typography;
 const { Option } = Select;
-
 function checkCondition(sys, dia) {
-  if (sys <= 90 || dia <= 60) return "Low";
-  else if (sys <= 120 || dia <= 80) return "Normal";
+  if (sys <= 90 || dia <= 60) return "Low Blood Pressure";
+  else if (sys <= 120 || dia <= 80) return "Normal Blood Pressure";
   else if (sys > 120 || dia > 80) return " High blood pressure";
 }
 function getItem(label, key, icon, children, type) {
@@ -71,6 +70,7 @@ let options = {
 
 const Signal = () => {
   const [collapsed, setCollapsed] = useState(true);
+  const [isRender, setRender] = useState(false);
   const [record, setRecord] = useState({
     sys: 0,
     dia: 0,
@@ -88,6 +88,8 @@ const Signal = () => {
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
+  const isResult = sessionStorage.getItem("isResult");
+
   const historyCollectionRef = collection(db2, "history");
   const saveRecord = async (data) => {
     await addDoc(historyCollectionRef, {
@@ -243,10 +245,11 @@ const Signal = () => {
                       width: "10px",
                       fontWeight: "bold",
                       backgroundColor:
-                        checkCondition(data.Signal1, data.Signal2) === "Low"
+                        checkCondition(data.Signal2, data.Signal1) ===
+                        "Low Blood Pressure"
                           ? "#7e22ff"
-                          : checkCondition(data.Signal1, data.Signal2) ===
-                            "Normal"
+                          : checkCondition(data.Signal2, data.Signal1) ===
+                            "Normal Blood Pressure"
                           ? "#a7e519"
                           : "#EE2727",
                       borderRadius: "50%",
@@ -256,17 +259,18 @@ const Signal = () => {
                   <span
                     style={{
                       color:
-                        checkCondition(data.Signal1, data.Signal2) === "Low"
+                        checkCondition(data.Signal2, data.Signal1) ===
+                        "Low Blood Pressure"
                           ? "#7e22ff"
-                          : checkCondition(data.Signal1, data.Signal2) ===
-                            "Normal"
+                          : checkCondition(data.Signal2, data.Signal1) ===
+                            "Normal Blood Pressure"
                           ? "#a7e519"
                           : "#a7e519",
                       fontWeight: "bold",
                       fontSize: "20px",
                     }}
                   >
-                    {checkCondition(data.Signal1, data.Signal2)}
+                    {checkCondition(data.Signal2, data.Signal1)}
                   </span>
                 </p>
               </div>
@@ -366,7 +370,7 @@ const Signal = () => {
           </div>
         )}
         {width >= 750 && (
-          <Row style={{ marginBottom: "40px", padding: "40px" }}>
+          <Row style={{ marginBottom: "40px", padding: "4rem 10rem" }}>
             <Col xs={24} sm={24} md={24} lg={24}>
               <Typography.Title level={2}> User profile</Typography.Title>
             </Col>
@@ -470,197 +474,148 @@ const Signal = () => {
             <Col xs={24} sm={24} md={24} lg={24}>
               <Typography.Title level={2}> Statistics</Typography.Title>
             </Col>
-
-            <Col xs={8} sm={8} md={8} lg={8}>
-              <Card
-                bordered={true}
-                style={{
-                  boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-                  marginBottom: "20px",
-                  borderRadius: " 30px",
-                  height: "250px",
-                }}
-              >
-                <div
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+                width: "100%",
+              }}
+            >
+              <Col xs={9} sm={9} md={9} lg={9}>
+                <Card
+                  bordered={true}
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "10px",
+                    boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                    marginBottom: "20px",
+                    borderRadius: " 30px",
+                    height: "250px",
                   }}
                 >
                   <div
                     style={{
                       display: "flex",
-                      flexDirection: "row",
-                      alignItems: "unset",
-                      gap: "20px ",
-                    }}
-                  >
-                    <HeartFilled
-                      style={{
-                        color: "#FA3B3B",
-                        fontSize: "30px",
-                      }}
-                    />
-                    <Typography.Title level={4}> Heart rate:</Typography.Title>
-                  </div>
-                  <div style={{ display: "flex", gap: "10px" }}>
-                    <Typography.Title
-                      level={1}
-                      style={{ color: "#EA1F1F", fontWeight: "800" }}
-                    >
-                      {data.Signal3}
-                    </Typography.Title>
-                    <Typography.Title
-                      level={5}
-                      style={{ color: "#EA1F1F", fontWeight: "800" }}
-                    >
-                      (bmp)
-                    </Typography.Title>
-                  </div>
-                </div>
-              </Card>
-            </Col>
-            <Col xs={1} sm={1} md={1} lg={1}></Col>
-            <Col xs={9} sm={9} md={9} lg={9}>
-              <Card
-                bordered={true}
-                style={{
-                  boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-                  marginBottom: "20px",
-                  borderRadius: " 30px",
-                  height: "250px",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "baseline",
-                      gap: "20px ",
-                    }}
-                  >
-                    <Typography.Title level={4}> SYS:</Typography.Title>
-                    <Typography.Title level={2}>
-                      {data.Signal1}
-                    </Typography.Title>
-                    <Typography.Title level={2}>{"mmHg"}</Typography.Title>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "baseline",
-                      gap: "20px ",
-                    }}
-                  >
-                    <Typography.Title level={4}> DIA:</Typography.Title>
-                    <Typography.Title level={2}>
-                      {data.Signal2}
-                    </Typography.Title>
-                    <Typography.Title level={2}>{"mmHg"}</Typography.Title>
-                  </div>
-                </div>
-              </Card>
-            </Col>
-            <Col xs={1} sm={1} md={1} lg={1}></Col>
-            <Col xs={5} sm={5} md={5} lg={5}>
-              <Card
-                bordered={true}
-                style={{
-                  boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-                  marginBottom: "20px",
-                  borderRadius: " 30px",
-                  height: "250px",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "10px",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: " space-around",
-                      alignItems: "baseline",
-                      width: "100%",
-                      gap: "20px ",
-                    }}
-                  >
-                    {/* <SmileTwoTone style={{ fontSize: "30px" }} /> */}
-                    <Typography.Title level={4}> Status:</Typography.Title>
-                    <InfoCircleFilled style={{ fontSize: "20px" }} />
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
                       gap: "10px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "unset",
+                        gap: "20px ",
+                      }}
+                    >
+                      <HeartFilled
+                        style={{
+                          color: "#FA3B3B",
+                          fontSize: "30px",
+                        }}
+                      />
+                      <Typography.Title level={4}>
+                        {" "}
+                        Heart rate:
+                      </Typography.Title>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "10px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography.Title
+                        level={1}
+                        style={{
+                          color: "#EA1F1F",
+                          fontWeight: "800",
+                          fontSize: "100px",
+                        }}
+                      >
+                        {data.Signal3}
+                      </Typography.Title>
+                      <Typography.Title
+                        level={5}
+                        style={{ color: "#EA1F1F", fontWeight: "800" }}
+                      >
+                        (bpm)
+                      </Typography.Title>
+                    </div>
+                  </div>
+                </Card>
+              </Col>
+              {/* <Col xs={4} sm={4} md={4} lg={4}></Col> */}
+              <Col xs={9} sm={9} md={9} lg={9}>
+                <Card
+                  className="info-card"
+                  bordered={true}
+                  style={{
+                    boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                    marginBottom: "20px",
+                    borderRadius: " 30px",
+                    height: "250px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
                       alignItems: "center",
                     }}
                   >
-                    <span
+                    <div
                       style={{
-                        height: "10px",
-                        width: "10px",
-                        fontWeight: "bold",
-                        backgroundColor:
-                          checkCondition(data.Signal1, data.Signal2) === "Low"
-                            ? "#7e22ff"
-                            : checkCondition(data.Signal1, data.Signal2) ===
-                              "Normal"
-                            ? "#a7e519"
-                            : "#EE2727",
-                        borderRadius: "50%",
-                        display: "inline-block",
-                      }}
-                    ></span>{" "}
-                    <span
-                      style={{
-                        color:
-                          checkCondition(data.Signal1, data.Signal2) === "Low"
-                            ? "#7e22ff"
-                            : checkCondition(data.Signal1, data.Signal2) ===
-                              "Normal"
-                            ? "#a7e519"
-                            : "#EE2727",
-                        fontWeight: "bold",
-                        fontSize: "20px",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "baseline",
+                        gap: "20px ",
                       }}
                     >
-                      {checkCondition(data.Signal1, data.Signal2)}
-                    </span>
+                      <Typography.Title level={4}> SYS:</Typography.Title>
+                      <Typography.Title level={1}>
+                        {data.Signal1}
+                      </Typography.Title>
+                      <Typography.Title level={4}>{"mmHg"}</Typography.Title>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "baseline",
+                        gap: "20px ",
+                      }}
+                    >
+                      <Typography.Title level={4}> DIA:</Typography.Title>
+                      <Typography.Title level={1}>
+                        {data.Signal2}
+                      </Typography.Title>
+                      <Typography.Title level={4}>{"mmHg"}</Typography.Title>
+                    </div>
                   </div>
-                </div>
-              </Card>
-            </Col>
+                </Card>
+              </Col>
+            </div>
+
+            {/* <Col xs={1} sm={1} md={1} lg={1}></Col> */}
+
             <Button
               style={{
                 width: "40%",
-                margin: "20px auto",
-                maxWidth: 120,
-                height: "50px",
+                margin: "5rem auto",
+                height: "100px",
                 borderRadius: "40px",
+                color: "#1890ff",
+                borderColor: "#1890ff",
+
+                fontSize: "24px",
               }}
-              type="primary"
-              size="small"
+              size="large"
               onClick={() => {
-                console.log(data);
+                sessionStorage.setItem("isResult", true);
+                setRender(true);
                 // setRecord({
                 //   dia: data.Signal1,
                 //   sys: data.Signal2,
@@ -668,11 +623,123 @@ const Signal = () => {
                 //   insertAt: new Date(),
                 // });
                 // saveRecord(data);
-                showConfirm(data);
+                // showConfirm(data);
               }}
             >
-              Save
+              Diagnose
             </Button>
+            {isResult && (
+              <>
+                <Col xs={24} sm={24} md={24} lg={24}>
+                  <Typography.Title level={2}> Result</Typography.Title>
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={24}>
+                  <Card
+                    bordered={true}
+                    style={{
+                      width: "60%",
+                      boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                      marginBottom: "20px",
+                      borderRadius: " 30px",
+                      height: "250px",
+                      margin: "0 auto",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        gap: "40px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: " space-around",
+                          alignItems: "baseline",
+                          width: "100%",
+                          gap: "20px ",
+                        }}
+                      >
+                        {/* <SmileTwoTone style={{ fontSize: "30px" }} /> */}
+                        <Typography.Title level={2}> Status:</Typography.Title>
+                        <InfoCircleFilled style={{ fontSize: "20px" }} />
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "10px",
+                          alignItems: "center",
+                        }}
+                      >
+                        <span
+                          style={{
+                            height: "10px",
+                            width: "10px",
+                            fontWeight: "bold",
+                            backgroundColor:
+                              checkCondition(data.Signal2, data.Signal1) ===
+                              "Low Blood Pressure"
+                                ? "#7e22ff"
+                                : checkCondition(data.Signal2, data.Signal1) ===
+                                  "Normal Blood Pressure"
+                                ? "#a7e519"
+                                : "#EE2727",
+                            borderRadius: "50%",
+                            display: "inline-block",
+                          }}
+                        ></span>{" "}
+                        <span
+                          style={{
+                            color:
+                              checkCondition(data.Signal2, data.Signal1) ===
+                              "Low Blood Pressure"
+                                ? "#7e22ff"
+                                : checkCondition(data.Signal2, data.Signal1) ===
+                                  "Normal Blood Pressure"
+                                ? "#a7e519"
+                                : "#EE2727",
+                            fontWeight: "bold",
+                            fontSize: "40px",
+                          }}
+                        >
+                          {checkCondition(data.Signal2, data.Signal1)}
+                        </span>
+                      </div>
+                    </div>
+                  </Card>
+                </Col>
+
+                <Button
+                  style={{
+                    width: "40%",
+                    margin: "20px auto",
+                    maxWidth: 240,
+                    height: "100px",
+                    borderRadius: "40px",
+                    fontSize: "26px",
+                  }}
+                  type="primary"
+                  size="small"
+                  onClick={() => {
+                    console.log(data);
+                    // setRecord({
+                    //   dia: data.Signal1,
+                    //   sys: data.Signal2,
+                    //   heartRate: data.Signal3,
+                    //   insertAt: new Date(),
+                    // });
+                    // saveRecord(data);
+                    showConfirm(data);
+                  }}
+                >
+                  Save
+                </Button>
+              </>
+            )}
           </Row>
         )}
       </div>

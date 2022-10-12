@@ -46,9 +46,9 @@ function getItem(label, key, icon, children, type) {
   };
 }
 function checkCondition(sys, dia) {
-  if (sys <= 90 || dia <= 60) return "Low";
-  else if (sys <= 120 || dia <= 80) return "Normal";
-  else if (sys > 120 || dia > 80) return " High blood pressure";
+  if (sys <= 90 || dia <= 60) return "Low Blood Pressure";
+  else if (sys <= 120 || dia <= 80) return "Normal Blood Pressure";
+  else if (sys > 120 || dia > 80) return " High Blood Pressure";
 }
 
 const items = [
@@ -128,7 +128,7 @@ const records = [
     id: "1",
     date: "08/04/2022",
     hour: "10:19",
-    status: "Normal",
+    status: "Normal Blood Pressure",
     sys: 136,
     dia: 78,
     heartrate: 83,
@@ -137,7 +137,7 @@ const records = [
     id: "2",
     date: "09/04/2022",
     hour: "10:31",
-    status: "Normal",
+    status: "Normal Blood Pressure",
     sys: 113,
     dia: 60,
     heartrate: 83,
@@ -146,7 +146,7 @@ const records = [
     id: "3",
     date: "09/04/2022",
     hour: "15:20",
-    status: "Normal",
+    status: "Normal Blood Pressure",
     sys: 119,
     dia: 68,
     heartrate: 83,
@@ -155,7 +155,7 @@ const records = [
     id: "4",
     date: "09/04/2022",
     hour: "16:42",
-    status: "Normal",
+    status: "Normal Blood Pressure",
     sys: 125,
     dia: 71,
   },
@@ -163,7 +163,7 @@ const records = [
     id: "5",
     date: "10/04/2022",
     hour: "09:30",
-    status: "Normal",
+    status: "Normal Blood Pressure",
     sys: 116,
     dia: 70,
     heartrate: 83,
@@ -172,7 +172,7 @@ const records = [
     id: "6",
     date: "10/04/2022",
     hour: "10:17",
-    status: "Normal",
+    status: "Normal Blood Pressure",
     sys: 111,
     dia: 65,
   },
@@ -180,7 +180,7 @@ const records = [
     id: "7",
     date: "10/04/2022",
     hour: "14:01",
-    status: "Normal",
+    status: "Normal Blood Pressure",
     sys: 112,
     dia: 63,
     heartrate: 83,
@@ -189,7 +189,7 @@ const records = [
     id: "8",
     date: "10/04/2022",
     hour: "14:59",
-    status: "Normal",
+    status: "Normal Blood Pressure",
     sys: 142,
     dia: 72,
   },
@@ -197,7 +197,7 @@ const records = [
     id: "9",
     date: "11/04/2022",
     hour: "09:42",
-    status: "Normal",
+    status: "Normal Blood Pressure",
     sys: 112,
     dia: 62,
     heartrate: 83,
@@ -206,7 +206,7 @@ const records = [
     id: "10",
     date: "11/04/2022",
     hour: "10:16",
-    status: "Normal",
+    status: "Normal Blood Pressure",
     sys: 106,
     dia: 59,
     heartrate: 83,
@@ -215,7 +215,7 @@ const records = [
     id: "11",
     date: "11/04/2022",
     hour: "10:40",
-    status: "Normal",
+    status: "Normal Blood Pressure",
     sys: 105,
     dia: 58,
     heartrate: 83,
@@ -224,7 +224,7 @@ const records = [
     id: "12",
     date: "11/04/2022",
     hour: "14:44",
-    status: "Normal",
+    status: "Normal Blood Pressure",
     sys: 123,
     dia: 61,
   },
@@ -232,7 +232,7 @@ const records = [
     id: "13",
     date: "11/04/2022",
     hour: "16:18",
-    status: "Normal",
+    status: "Normal Blood Pressure",
     sys: 111,
     dia: 68,
     heartrate: 83,
@@ -241,7 +241,7 @@ const records = [
     id: "14",
     date: "12/04/2022",
     hour: "01:22",
-    status: "Normal",
+    status: "Normal Blood Pressure",
     sys: 113,
     dia: 64,
     heartrate: 83,
@@ -250,7 +250,7 @@ const records = [
     id: "15",
     date: "11/04/2022",
     hour: "15:58",
-    status: "Normal",
+    status: "Normal Blood Pressure",
     sys: 125,
     dia: 72,
     heartrate: 83,
@@ -313,72 +313,139 @@ const History = () => {
           }}
         />
       </div>
-      <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <div style={{ marginTop: "10px", marginLeft: "10px" }}>
           <Title level={2}>History</Title>
         </div>
         <Divider />
         <div
           style={{
-            marginTop: "10px",
-            marginLeft: "10px",
-            width: "80%",
-            minWidth: "300px",
-            border: "1px solid",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <Line options={options} data={data2} />
-        </div>
-        <div style={{ marginTop: "30px", marginLeft: "10px", width: "80%" }}>
-          <RangePicker
-            onFocus={(e) => {
-              console.log(e);
+          <Typography.Title level={2} style={{ width: "80%" }}>
+            {" "}
+            Time-series Chart
+          </Typography.Title>
+
+          <div
+            style={{
+              marginTop: "10px",
+              marginLeft: "10px",
+              width: "80%",
+              minWidth: "300px",
+              boxShadow: "rgb(0 0 0 / 35%) 0px 5px 15px",
+              padding: "40px",
+              borderRadius: "40px",
             }}
-          />
-        </div>
-        <div style={{ marginTop: "30px", marginLeft: "10px", width: "85%" }}>
-          <List
-            grid={{
-              gutter: 16,
-              column: 1,
+          >
+            <Line options={options} data={data2} />
+          </div>
+
+          <Typography.Title
+            level={2}
+            style={{
+              width: "80%",
+              marginTop: "4rem",
+              display: "flex",
+              justifyContent: "space-between",
             }}
-            dataSource={record}
-            renderItem={(item) => (
-              <List.Item>
-                <Card>
-                  <Meta
-                    title={moment
-                      .unix(item.insert_at.seconds)
-                      .format("DD/MM/YYYY")}
-                    description={moment
-                      .unix(item.insert_at.seconds)
-                      .format("HH:mm:ss")}
-                  />
-                  <Divider></Divider>
-                  <p>SYS: {item.sys}</p>
-                  <p>DIA: {item.dia}</p>
-                  <p>Heart rate: {item.heart_rate}</p>
-                  <p>
-                    Status:{" "}
-                    <span
+          >
+            {" "}
+            Records
+            <RangePicker
+              onFocus={(e) => {
+                console.log(e);
+              }}
+            />
+          </Typography.Title>
+          <div style={{ marginTop: "30px", marginLeft: "10px", width: "85%" }}>
+            <List
+              grid={{
+                gutter: 16,
+                column: 1,
+              }}
+              dataSource={record}
+              renderItem={(item) => (
+                <List.Item>
+                  <Card
+                    style={{
+                      boxShadow: "rgb(0 0 0 / 35%) 0px 5px 15px",
+                      borderRadius: "40px",
+                    }}
+                  >
+                    <Meta
+                      title={moment
+                        .unix(item.insert_at.seconds)
+                        .format("DD/MM/YYYY")}
+                      description={moment
+                        .unix(item.insert_at.seconds)
+                        .format("HH:mm:ss")}
+                    />
+                    <Divider></Divider>
+                    <div
                       style={{
-                        color:
-                          checkCondition(item.sys, item.dia) === "Low"
-                            ? "#7e22ff"
-                            : checkCondition(item.sys, item.dia) === "Normal"
-                            ? "#a7e519"
-                            : "#EE2727",
-                        fontWeight: "bold",
+                        display: "flex",
+                        gap: "10rem",
                       }}
                     >
-                      {console.log(checkCondition(item.sys, item.dia))}
-                      {checkCondition(item.sys, item.dia)}
-                    </span>
-                  </p>
-                </Card>
-              </List.Item>
-            )}
-          />
+                      <div style={{ display: "flex", gap: " 50px" }}>
+                        <p style={{ fontSize: "18px" }}>
+                          Heart rate:{" "}
+                          <span style={{ fontWeight: 900 }}>
+                            {" "}
+                            {item.heart_rate}{" "}
+                          </span>
+                          {"bpm"}
+                        </p>
+
+                        <p style={{ fontSize: "18px" }}>
+                          SYS:{" "}
+                          <span style={{ fontWeight: 900 }}>{item.sys}</span>{" "}
+                          {"mmHg"}
+                        </p>
+                        <p style={{ fontSize: "18px" }}>
+                          DIA:{" "}
+                          <span style={{ fontWeight: 900 }}>{item.dia}</span>{" "}
+                          {"mmHg"}
+                        </p>
+                      </div>
+                      <div>
+                        <p style={{ fontSize: "18px" }}>
+                          Status:{" "}
+                          <span
+                            style={{
+                              color:
+                                checkCondition(item.sys, item.dia) ===
+                                "Low Blood Pressure"
+                                  ? "#7e22ff"
+                                  : checkCondition(item.sys, item.dia) ===
+                                    "Normal Blood Pressure"
+                                  ? "#a7e519"
+                                  : "#EE2727",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {console.log(checkCondition(item.sys, item.dia))}
+                            {checkCondition(item.sys, item.dia)}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+                </List.Item>
+              )}
+            />
+          </div>
         </div>
       </div>
     </div>
