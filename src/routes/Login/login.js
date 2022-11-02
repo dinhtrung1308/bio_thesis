@@ -5,7 +5,7 @@ import { Button, Checkbox, Form, Input } from "antd";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { render } from "react-dom";
-import "./App.css";
+import "./login.css";
 
 function Login() {
   const onFinish = (values) => {
@@ -19,7 +19,12 @@ function Login() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <img
+          src={logo}
+          className="App-logo"
+          alt="logo"
+          style={{ height: "38vmin" }}
+        />
       </header>
       <body>
         {/* <div className="login-title">
@@ -32,7 +37,13 @@ function Login() {
             level={1}
             style={{ margin: 0, color: "#EF362F", fontWeight: "bold" }}
           >
-            BIOTHESIS
+            Chào mừng đến với ABP !
+          </Typography.Title>
+          <Typography.Title
+            level={4}
+            style={{ margin: 0, color: "#EF362F", fontWeight: "bold" }}
+          >
+            Ứng dụng theo dõi huyết áp thông minh.
           </Typography.Title>
           <Form
             name="normal_login"
@@ -48,7 +59,7 @@ function Login() {
             >
               <Input
                 prefix={<UserOutlined className="site-form-item-icon" />}
-                placeholder="Username"
+                placeholder="SĐT"
               />
             </Form.Item>
             <Form.Item
@@ -60,7 +71,7 @@ function Login() {
               <Input
                 prefix={<LockOutlined className="site-form-item-icon" />}
                 type="password"
-                placeholder="Password"
+                placeholder="Mật khẩu"
               />
             </Form.Item>
 
@@ -68,15 +79,22 @@ function Login() {
               <Button
                 type="primary"
                 size={"large"}
-                style={{ padding: "0 25px" }}
+                style={{ padding: "0 25px", minWidth: "80px" }}
                 onClick={() => {
                   navigate("signal");
                 }}
               >
-                Login
+                Đăng Nhập
               </Button>
-              <Button danger size="large">
-                Register
+              <Button
+                style={{ padding: "0 25px", minWidth: "80px" }}
+                danger
+                size="large"
+                onClick={() => {
+                  navigate("signup");
+                }}
+              >
+                Đăng Ký
               </Button>
             </Form.Item>
           </Form>

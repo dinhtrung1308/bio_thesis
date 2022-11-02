@@ -1,0 +1,111 @@
+
+.App {
+  text-align: center;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+
+}
+.signal-layout{
+  display: flex;
+  flex-direction: row;
+  background: url('/src/assets/img/background.svg') no-repeat;
+  background-size: 100%;
+}
+.login-title{margin-bottom: 30px;}
+.login-form{
+  height: 300px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #fff;
+  margin: 30px 0px;
+}
+
+.App-logo {
+  height: 50vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  
+}
+
+.App-header {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: translateY(4px);
+  }
+  to {
+    transform: translateY(0px);
+  }
+}
+#components-form-demo-normal-login .login-form {
+  max-width: 400px;
+  
+}
+#components-form-demo-normal-login .login-form-forgot {
+  float: right;
+}
+#components-form-demo-normal-login .ant-col-rtl .login-form-forgot {
+  float: left;
+}
+#components-form-demo-normal-login .login-form-button {
+  width: 100%;
+}
+.container {
+  display: flex;
+  margin: 10px auto;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.pulse-button {
+  background: rgba(78,80,252, 1);
+  box-shadow: 0 0 0 0 rgba(78,80,252, 1);
+  animation: pulse-blue 2s infinite;
+  color: #fff;
+  width: 120px;
+  height: 120px;
+}
+
+@keyframes pulse-blue {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(78,80,252, 0.7);
+  }
+  
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(78,80,252, 0);
+  }
+  
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(78,80,252, 0);
+  }
+}
+.ant-modal-confirm .ant-modal-confirm-btns {
+  margin-top: 24px;
+  text-align: center;
+}
+.ant-modal-confirm .ant-modal-body {
+  display: flex;
+  padding: 32px 32px 24px;
+  justify-content: center;
+}

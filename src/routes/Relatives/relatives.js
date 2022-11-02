@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import { Button, Menu } from "antd";
 import React, { useState } from "react";
-import "./App.css";
+import "./relative.css";
 import {
   Space,
   Typography,
@@ -23,7 +23,17 @@ import {
 import { Col, Row } from "antd";
 import { Card } from "antd";
 import { Divider } from "antd";
-
+import {
+  collection,
+  getDocs,
+  orderBy,
+  query,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+import { db, db2 } from "../../firebase-config.js";
 import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
@@ -232,7 +242,7 @@ const Relatives = () => {
   };
 
   return (
-    <div className="signal-layout">
+    <div className="relative-layout">
       <div
         style={{
           width: "max-content",

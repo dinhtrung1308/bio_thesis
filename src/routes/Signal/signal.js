@@ -15,7 +15,7 @@ import {
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
-import "./App.css";
+import "./signal.css";
 import { Space, Typography } from "antd";
 import { Col, Row, Image } from "antd";
 import { Card } from "antd";
@@ -37,9 +37,9 @@ import Title from "antd/lib/skeleton/Title";
 const { Text, Link } = Typography;
 const { Option } = Select;
 function checkCondition(sys, dia) {
-  if (sys <= 90 || dia <= 60) return "Low Blood Pressure";
-  else if (sys <= 120 || dia <= 80) return "Normal Blood Pressure";
-  else if (sys > 120 || dia > 80) return " High blood pressure";
+  if (sys <= 90 || dia <= 60) return "Huyết Áp Thấp";
+  else if (sys <= 120 || dia <= 80) return "Huyết Áp Bình Thường";
+  else if (sys > 120 || dia > 80) return " Cao Huyết Áp";
 }
 function getItem(label, key, icon, children, type) {
   return {
@@ -169,16 +169,16 @@ const Signal = () => {
           flexDirection: "column",
         }}
       >
-        <div
+        {/* <div
           style={{
             marginTop: "10px",
             marginLeft: "10px",
             marginBottom: "20px",
           }}
         >
-          <Text strong>Hello, Thu Phuong</Text>
-        </div>
-        <div className="container">
+          <Text strong>Xin Chào, Thu Phương</Text>
+        </div> */}
+        {/* <div className="container">
           <Button className="pulse-button" shape="circle">
             <img
               src={bluetoothIcon}
@@ -199,9 +199,9 @@ const Signal = () => {
                 });
             }}
           >
-            Find Devices
+            Tìm Thiết Bị
           </Button>
-        </div>
+        </div> */}
         {width < 750 && (
           <div
             style={{
@@ -246,10 +246,10 @@ const Signal = () => {
                       fontWeight: "bold",
                       backgroundColor:
                         checkCondition(data.Signal2, data.Signal1) ===
-                        "Low Blood Pressure"
+                        "Huyết Áp Thấp"
                           ? "#7e22ff"
                           : checkCondition(data.Signal2, data.Signal1) ===
-                            "Normal Blood Pressure"
+                            "Huyết Áp Bình Thường"
                           ? "#a7e519"
                           : "#EE2727",
                       borderRadius: "50%",
@@ -260,10 +260,10 @@ const Signal = () => {
                     style={{
                       color:
                         checkCondition(data.Signal2, data.Signal1) ===
-                        "Low Blood Pressure"
+                        "Huyết Áp Thấp"
                           ? "#7e22ff"
                           : checkCondition(data.Signal2, data.Signal1) ===
-                            "Normal Blood Pressure"
+                            "Huyết Áp Bình Thường"
                           ? "#a7e519"
                           : "#a7e519",
                       fontWeight: "bold",
@@ -372,7 +372,7 @@ const Signal = () => {
         {width >= 750 && (
           <Row style={{ marginBottom: "40px", padding: "4rem 10rem" }}>
             <Col xs={24} sm={24} md={24} lg={24}>
-              <Typography.Title level={2}> User profile</Typography.Title>
+              <Typography.Title level={2}> Hồ sơ cá nhân</Typography.Title>
             </Col>
             <Col xs={12} sm={12} md={24} lg={24}>
               <Card
@@ -405,9 +405,9 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography>Age :</Typography>
+                      <Typography>Tuổi :</Typography>
                       <Input
-                        placeholder="Please write your age"
+                        placeholder="Vui lòng nhập tuổi"
                         name="age"
                         type="number"
                         style={{
@@ -423,7 +423,7 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography>Gender :</Typography>
+                      <Typography>Giới tính :</Typography>
                       <Select
                         defaultValue=""
                         style={{
@@ -432,10 +432,10 @@ const Signal = () => {
                         onChange={handleChange}
                       >
                         <Option value="" disabled selected hidden>
-                          Select Gender
+                          Chọn Giới Tính
                         </Option>
-                        <Option value="male">Male</Option>
-                        <Option value="female">Female</Option>
+                        <Option value="male">Nam</Option>
+                        <Option value="female">Nữ</Option>
                       </Select>
                     </div>
                     <div
@@ -446,7 +446,7 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography>Condition :</Typography>
+                      <Typography>Tình trạng :</Typography>
 
                       <Select
                         defaultValue="normal"
@@ -455,13 +455,13 @@ const Signal = () => {
                         }}
                         onChange={handleChange}
                       >
-                        <Option value="normal">Normal</Option>
-                        <Option value="good">Good</Option>
-                        <Option value="bad">Bad</Option>
-                        <Option value="stressed">Stressed</Option>
-                        <Option value="troubleeating">Trouble Eating</Option>
-                        <Option value="drunk">Drunk</Option>
-                        <Option value="smoked">Smoked</Option>
+                        <Option value="normal">Bình Thường</Option>
+                        <Option value="good">Tốt</Option>
+                        <Option value="bad">Không Khỏe</Option>
+                        <Option value="stressed">Căng Thẳng</Option>
+                        <Option value="troubleeating">Khó Ăn</Option>
+                        <Option value="drunk">Say Xỉn</Option>
+                        <Option value="smoked">Hút Thuốc</Option>
                       </Select>
                     </div>
                   </div>
@@ -472,7 +472,7 @@ const Signal = () => {
               </Card>
             </Col>
             <Col xs={24} sm={24} md={24} lg={24}>
-              <Typography.Title level={2}> Statistics</Typography.Title>
+              <Typography.Title level={2}> Thông số</Typography.Title>
             </Col>
             <div
               style={{
@@ -514,10 +514,7 @@ const Signal = () => {
                           fontSize: "30px",
                         }}
                       />
-                      <Typography.Title level={4}>
-                        {" "}
-                        Heart rate:
-                      </Typography.Title>
+                      <Typography.Title level={4}> Nhịp tim</Typography.Title>
                     </div>
                     <div
                       style={{
@@ -626,12 +623,12 @@ const Signal = () => {
                 // showConfirm(data);
               }}
             >
-              Diagnose
+              Chẩn Đoán
             </Button>
             {isResult && (
               <>
                 <Col xs={24} sm={24} md={24} lg={24}>
-                  <Typography.Title level={2}> Result</Typography.Title>
+                  <Typography.Title level={2}> Kết Quả</Typography.Title>
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={24}>
                   <Card
@@ -665,7 +662,10 @@ const Signal = () => {
                         }}
                       >
                         {/* <SmileTwoTone style={{ fontSize: "30px" }} /> */}
-                        <Typography.Title level={2}> Status:</Typography.Title>
+                        <Typography.Title level={2}>
+                          {" "}
+                          Trạng Thái:
+                        </Typography.Title>
                         <InfoCircleFilled style={{ fontSize: "20px" }} />
                       </div>
                       <div
@@ -682,10 +682,10 @@ const Signal = () => {
                             fontWeight: "bold",
                             backgroundColor:
                               checkCondition(data.Signal2, data.Signal1) ===
-                              "Low Blood Pressure"
+                              "Huyết Áp Thấp"
                                 ? "#7e22ff"
                                 : checkCondition(data.Signal2, data.Signal1) ===
-                                  "Normal Blood Pressure"
+                                  "Huyết Áp Bình Thường"
                                 ? "#a7e519"
                                 : "#EE2727",
                             borderRadius: "50%",
@@ -696,10 +696,10 @@ const Signal = () => {
                           style={{
                             color:
                               checkCondition(data.Signal2, data.Signal1) ===
-                              "Low Blood Pressure"
+                              "Huyết Áp Thấp"
                                 ? "#7e22ff"
                                 : checkCondition(data.Signal2, data.Signal1) ===
-                                  "Normal Blood Pressure"
+                                  "Huyết Áp Bình Thường"
                                 ? "#a7e519"
                                 : "#EE2727",
                             fontWeight: "bold",

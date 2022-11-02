@@ -4,8 +4,8 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-
-
+  background: url('/src/assets/img/background.svg') no-repeat;
+  background-size: 100%;
 }
 
 .login-title{margin-bottom: 30px;}

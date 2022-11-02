@@ -9,7 +9,7 @@ import {
 import { Button, Menu } from "antd";
 import moment from "moment";
 import React, { useState, useEffect } from "react";
-import "./App.css";
+import "./history.css";
 import { Space, Typography, DatePicker, List } from "antd";
 import { Chart, registerables } from "chart.js";
 import { Line } from "react-chartjs-2";
@@ -46,9 +46,9 @@ function getItem(label, key, icon, children, type) {
   };
 }
 function checkCondition(sys, dia) {
-  if (sys <= 90 || dia <= 60) return "Low Blood Pressure";
-  else if (sys <= 120 || dia <= 80) return "Normal Blood Pressure";
-  else if (sys > 120 || dia > 80) return " High Blood Pressure";
+  if (sys <= 90 || dia <= 60) return "Huyết Áp Thấp";
+  else if (sys <= 120 || dia <= 80) return "Huyết Áp Bình Thường";
+  else if (sys > 120 || dia > 80) return " Huyết Áp Cao";
 }
 
 const items = [
@@ -128,7 +128,7 @@ const records = [
     id: "1",
     date: "08/04/2022",
     hour: "10:19",
-    status: "Normal Blood Pressure",
+    status: "Huyết Áp Bình Thường",
     sys: 136,
     dia: 78,
     heartrate: 83,
@@ -137,7 +137,7 @@ const records = [
     id: "2",
     date: "09/04/2022",
     hour: "10:31",
-    status: "Normal Blood Pressure",
+    status: "Huyết Áp Bình Thường",
     sys: 113,
     dia: 60,
     heartrate: 83,
@@ -146,7 +146,7 @@ const records = [
     id: "3",
     date: "09/04/2022",
     hour: "15:20",
-    status: "Normal Blood Pressure",
+    status: "Huyết Áp Bình Thường",
     sys: 119,
     dia: 68,
     heartrate: 83,
@@ -155,7 +155,7 @@ const records = [
     id: "4",
     date: "09/04/2022",
     hour: "16:42",
-    status: "Normal Blood Pressure",
+    status: "Huyết Áp Bình Thường",
     sys: 125,
     dia: 71,
   },
@@ -163,7 +163,7 @@ const records = [
     id: "5",
     date: "10/04/2022",
     hour: "09:30",
-    status: "Normal Blood Pressure",
+    status: "Huyết Áp Bình Thường",
     sys: 116,
     dia: 70,
     heartrate: 83,
@@ -172,7 +172,7 @@ const records = [
     id: "6",
     date: "10/04/2022",
     hour: "10:17",
-    status: "Normal Blood Pressure",
+    status: "Huyết Áp Bình Thường",
     sys: 111,
     dia: 65,
   },
@@ -180,7 +180,7 @@ const records = [
     id: "7",
     date: "10/04/2022",
     hour: "14:01",
-    status: "Normal Blood Pressure",
+    status: "Huyết Áp Bình Thường",
     sys: 112,
     dia: 63,
     heartrate: 83,
@@ -189,7 +189,7 @@ const records = [
     id: "8",
     date: "10/04/2022",
     hour: "14:59",
-    status: "Normal Blood Pressure",
+    status: "Huyết Áp Bình Thường",
     sys: 142,
     dia: 72,
   },
@@ -197,7 +197,7 @@ const records = [
     id: "9",
     date: "11/04/2022",
     hour: "09:42",
-    status: "Normal Blood Pressure",
+    status: "Huyết Áp Bình Thường",
     sys: 112,
     dia: 62,
     heartrate: 83,
@@ -206,7 +206,7 @@ const records = [
     id: "10",
     date: "11/04/2022",
     hour: "10:16",
-    status: "Normal Blood Pressure",
+    status: "Huyết Áp Bình Thường",
     sys: 106,
     dia: 59,
     heartrate: 83,
@@ -215,7 +215,7 @@ const records = [
     id: "11",
     date: "11/04/2022",
     hour: "10:40",
-    status: "Normal Blood Pressure",
+    status: "Huyết Áp Bình Thường",
     sys: 105,
     dia: 58,
     heartrate: 83,
@@ -224,7 +224,7 @@ const records = [
     id: "12",
     date: "11/04/2022",
     hour: "14:44",
-    status: "Normal Blood Pressure",
+    status: "Huyết Áp Bình Thường",
     sys: 123,
     dia: 61,
   },
@@ -232,7 +232,7 @@ const records = [
     id: "13",
     date: "11/04/2022",
     hour: "16:18",
-    status: "Normal Blood Pressure",
+    status: "Huyết Áp Bình Thường",
     sys: 111,
     dia: 68,
     heartrate: 83,
@@ -241,7 +241,7 @@ const records = [
     id: "14",
     date: "12/04/2022",
     hour: "01:22",
-    status: "Normal Blood Pressure",
+    status: "Huyết Áp Bình Thường",
     sys: 113,
     dia: 64,
     heartrate: 83,
@@ -250,7 +250,7 @@ const records = [
     id: "15",
     date: "11/04/2022",
     hour: "15:58",
-    status: "Normal Blood Pressure",
+    status: "Huyết Áp Bình Thường",
     sys: 125,
     dia: 72,
     heartrate: 83,
@@ -284,7 +284,7 @@ const History = () => {
   }
 
   return (
-    <div className="signal-layout">
+    <div className="history-layout">
       <div
         style={{
           width: "max-content",
@@ -322,7 +322,7 @@ const History = () => {
         }}
       >
         <div style={{ marginTop: "10px", marginLeft: "10px" }}>
-          <Title level={2}>History</Title>
+          <Title level={2}>Lịch Sử</Title>
         </div>
         <Divider />
         <div
@@ -334,9 +334,8 @@ const History = () => {
         >
           <Typography.Title level={2} style={{ width: "80%" }}>
             {" "}
-            Time-series Chart
+            Biểu đồ theo thời gian
           </Typography.Title>
-
           <div
             style={{
               marginTop: "10px",
@@ -350,7 +349,6 @@ const History = () => {
           >
             <Line options={options} data={data2} />
           </div>
-
           <Typography.Title
             level={2}
             style={{
@@ -361,7 +359,7 @@ const History = () => {
             }}
           >
             {" "}
-            Records
+            Bản ghi
             <RangePicker
               onFocus={(e) => {
                 console.log(e);
@@ -400,7 +398,7 @@ const History = () => {
                     >
                       <div style={{ display: "flex", gap: " 50px" }}>
                         <p style={{ fontSize: "18px" }}>
-                          Heart rate:{" "}
+                          Nhịp tim:{" "}
                           <span style={{ fontWeight: 900 }}>
                             {" "}
                             {item.heart_rate}{" "}
@@ -421,15 +419,15 @@ const History = () => {
                       </div>
                       <div>
                         <p style={{ fontSize: "18px" }}>
-                          Status:{" "}
+                          Trạng thái:{" "}
                           <span
                             style={{
                               color:
                                 checkCondition(item.sys, item.dia) ===
-                                "Low Blood Pressure"
+                                "Huyết Áp Thấp"
                                   ? "#7e22ff"
                                   : checkCondition(item.sys, item.dia) ===
-                                    "Normal Blood Pressure"
+                                    "Huyết Áp Bình Thường"
                                   ? "#a7e519"
                                   : "#EE2727",
                               fontWeight: "bold",
