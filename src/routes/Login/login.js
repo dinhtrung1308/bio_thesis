@@ -1,11 +1,12 @@
 import logo from "../../assets/img/login.jpg";
 import { Divider, Radio, Typography } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Checkbox, Form, Input } from "antd";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { render } from "react-dom";
 import "./login.css";
+import { TextField, Button } from "@mui/material";
 
 function Login() {
   const onFinish = (values) => {
@@ -13,94 +14,103 @@ function Login() {
   };
   let navigate = useNavigate();
   function navigateToDetail() {
-    console.log("abc");
     navigate("signal");
   }
+  function navigateToSignUp() {
+    navigate("signup");
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img
-          src={logo}
-          className="App-logo"
-          alt="logo"
-          style={{ height: "38vmin" }}
-        />
-      </header>
-      <body>
-        {/* <div className="login-title">
-          <Typography.Title level={1} style={{ margin: 0, color: "#FF5D5C" }}>
-            BIOTHESIS
-          </Typography.Title>
-        </div> */}
-        <div className="login-form">
-          <Typography.Title
-            level={1}
-            style={{ margin: 0, color: "#EF362F", fontWeight: "bold" }}
+    <div className="login-container">
+      <div className="login-form">
+        <div className="login-form-title">
+          <Typography
+            style={{ color: "#D8F0FC", fontSize: 56, fontWeight: "bold" }}
           >
-            Chào mừng đến với ABP !
-          </Typography.Title>
-          <Typography.Title
-            level={4}
-            style={{ margin: 0, color: "#EF362F", fontWeight: "bold" }}
-          >
-            Ứng dụng theo dõi huyết áp thông minh.
-          </Typography.Title>
-          <Form
-            name="normal_login"
-            className="login-form"
-            initialValues={{ remember: true }}
-            onFinish={onFinish}
-          >
-            <Form.Item
-              name="username"
-              rules={[
-                { required: true, message: "Please input your Username!" },
-              ]}
-            >
-              <Input
-                prefix={<UserOutlined className="site-form-item-icon" />}
-                placeholder="SĐT"
-              />
-            </Form.Item>
-            <Form.Item
-              name="password"
-              rules={[
-                { required: true, message: "Please input your Password!" },
-              ]}
-            >
-              <Input
-                prefix={<LockOutlined className="site-form-item-icon" />}
-                type="password"
-                placeholder="Mật khẩu"
-              />
-            </Form.Item>
-
-            <Form.Item>
-              <Button
-                type="primary"
-                size={"large"}
-                style={{ padding: "0 25px", minWidth: "80px" }}
-                onClick={() => {
-                  navigate("signal");
-                }}
-              >
-                Đăng Nhập
-              </Button>
-              <Button
-                style={{ padding: "0 25px", minWidth: "80px" }}
-                danger
-                size="large"
-                onClick={() => {
-                  navigate("signup");
-                }}
-              >
-                Đăng Ký
-              </Button>
-            </Form.Item>
-          </Form>
+            Đăng nhập
+          </Typography>
         </div>
-      </body>
-      <footer>Copyright by @Thu Phuong</footer>
+        <div
+          className="login-form-body"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+          }}
+        >
+          <div
+            className="login-form-body-account"
+            style={{
+              display: "flex",
+              gap: 40,
+              flexDirection: "column",
+            }}
+          >
+            <div
+              style={{ display: "flex", gap: 5, flexDirection: "column" }}
+              className="login-form-body-account-input"
+            >
+              <Typography
+                style={{ color: "#D8F0FC", fontSize: 28, fontWeight: 700 }}
+              >
+                SĐT
+              </Typography>
+              <TextField
+                fullWidth
+                style={{
+                  backgroundColor: "#fff",
+                  borderRadius: "8px",
+                  border: "#fff",
+                }}
+              />
+              <Typography
+                style={{ color: "#D8F0FC", fontSize: 28, fontWeight: 700 }}
+              >
+                Mật khẩu
+              </Typography>
+              <TextField
+                fullWidth
+                type="password"
+                style={{
+                  backgroundColor: "#fff",
+                  borderRadius: "8px",
+                  border: "#fff",
+                }}
+              />
+            </div>
+
+            <Button
+              fullWidth
+              variant="contained"
+              style={{
+                backgroundColor: "rgba(255, 52, 78, 0.75)",
+                borderRadius: 40,
+              }}
+              size="large"
+              onClick={navigateToDetail}
+            >
+              Đăng nhập
+            </Button>
+            <div className="login-form-body-account-extra"></div>
+          </div>
+
+          <div
+            style={{ width: "fit-content", margin: "0 auto" }}
+            className="login-form-body-account"
+          >
+            <Typography
+              style={{ color: "rgba(0, 0, 0, 0.25)", fontSize: "18px" }}
+            >
+              Bạn đã có tài khoản chưa?{" "}
+              <span
+                style={{ color: "rgba(255, 52, 78, 0.75)", cursor: "pointer" }}
+                onClick={navigateToSignUp}
+              >
+                Đăng ký
+              </span>
+            </Typography>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 
-.App {
+/* .App {
   text-align: center;
   padding: 10px;
   display: flex;
@@ -7,21 +7,48 @@
   gap: 20px;
 
 
+} */
+.login-container{
+  background: url('/src/assets/img/login.svg') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  /* Set rules to fill background */
+  min-height: 100%;
+  	
+  /* Set up proportionate scaling */
+  width: 100%;
+  height: auto;
+	
+  /* Set up positioning */
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
 .login-title{margin-bottom: 30px;}
 .login-form{
-  height: 300px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  background: #fff;
-  margin: 30px 0px;
+display: flex !important;
+height: max-content !important;
+position: absolute !important;
+width: 450px !important;
+left: 58.60% !important;
+right: 5.21% !important;
+top: 8.11% !important;
+bottom: 8.12% !important;
+padding: 40px !important;
+
+background: rgba(255, 255, 255, 0.1) !important;
+border: 2px solid rgba(255, 255, 255, 0.37) !important;
+backdrop-filter: blur(25px) !important;
+/* Note: backdrop-filter has minimal browser support */
+
+border-radius: 15px !important;
 }
 
 .App-logo {
-  height: 50vmin;
+  height: 50vmin ;
   pointer-events: none;
 }
 
