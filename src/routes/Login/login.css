@@ -1,53 +1,118 @@
 
-/* .App {
-  text-align: center;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+*{
+  box-sizing: border-box;
+}
 
+.login1-container {
+  display: grid;
+  position: relative;
+  height: 100vh;
+  align-items: center;
+}
 
-} */
-.login-container{
-  background: url('/src/assets/img/login.svg') no-repeat center center fixed; 
+.login1-img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.login1-form {
+  display: grid;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border: 2px solid rgba(255, 255, 255, 0.37) !important;
+  margin-inline: 1.5rem;
+  backdrop-filter: blur(20px);
+  row-gap: 1.5rem;
+  padding: 2rem;
+  border-radius: 1rem;
+}
+
+.login1-form-body-account-input {
+  row-gap: .75rem;
+  margin-bottom: 2rem;
+}
+
+.login1-box {
+  position: relative;
+}
+
+/* For medium devices */
+@media screen and (min-width: 576px) {
+  .login1-form {
+    width: 450px;
+    justify-self: center;
+  }
+}
+
+/* For large devices */
+@media screen and (min-width: 1064px) {
+  .login1-container {
+    height: 100vh;
+    display: grid;
+    place-items: center;
+  }
+
+  .login1-form {
+    justify-self: flex-end;
+    margin-right: 4.5rem;
+  }
+}
+/* .login-container{
+  position: relative;
+  height: 100vh;
+  align-items: center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  /* Set rules to fill background */
+  background-position: center;
+  Set rules to fill background
   min-height: 100%;
   	
-  /* Set up proportionate scaling */
+  Set up proportionate scaling
   width: 100%;
   height: auto;
 	
-  /* Set up positioning */
+  Set up positioning
   position: fixed;
   top: 0;
   left: 0;
+} */
+
+/* .login-img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: cover;
 }
 
-.login-title{margin-bottom: 30px;}
 .login-form{
-display: flex !important;
-height: max-content !important;
-position: absolute !important;
-width: 450px !important;
-left: 58.60% !important;
-right: 5.21% !important;
-top: 8.11% !important;
-bottom: 8.12% !important;
-padding: 40px !important;
+  position: relative;
+  display: flex !important;
+  height: max-content !important;
+  position: absolute !important;
+  width: 450px !important;
+  left: 58.60% !important;
+  right: 5.21% !important;
+  top: 8.11% !important;
+  bottom: 8.12% !important;
+  padding: 40px !important;
 
-background: rgba(255, 255, 255, 0.1) !important;
-border: 2px solid rgba(255, 255, 255, 0.37) !important;
-backdrop-filter: blur(25px) !important;
-/* Note: backdrop-filter has minimal browser support */
+  row-gap: 1.25rem;
+  margin-inline: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border: 2px solid rgba(255, 255, 255, 0.37) !important;
+  backdrop-filter: blur(25px) !important;
+Note: backdrop-filter has minimal browser support
 
 border-radius: 15px !important;
-}
+} */
 
-.App-logo {
+/* .App-logo {
   height: 50vmin ;
   pointer-events: none;
 }
@@ -63,9 +128,9 @@ border-radius: 15px !important;
   align-items: center;
   font-size: calc(10px + 2vmin);
   color: white;
-}
+} */
 
-.App-link {
+/* .App-link {
   color: #61dafb;
 }
 
@@ -89,4 +154,5 @@ border-radius: 15px !important;
 }
 #components-form-demo-normal-login .login-form-button {
   width: 100%;
-}
+} */
+

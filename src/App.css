@@ -1,23 +1,7 @@
-.App {
-  text-align: center;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  background: url('/src/assets/img/background.svg') no-repeat;
-  background-size: 100%;
-}
+
 
 .login-title{margin-bottom: 30px;}
-.login-form{
-  height: 300px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  background: #fff;
-  margin: 30px 0px;
-}
+
 
 .App-logo {
   height: 50vmin;
