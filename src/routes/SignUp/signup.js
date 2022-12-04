@@ -14,7 +14,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { render } from "react-dom";
 import SVGComponent from "./image.js";
-import "./signup.css";
+import "./App.css";
 import {
   collection,
   getDocs,
@@ -77,7 +77,7 @@ function SignUp() {
         <div className="form__left">
           <SVGComponent style={{ maxWidth: "300px" }} />
           <div className="form__left-title">
-            <Typography style={{ color: "#1F67B1" }}>
+            <Typography style={{ color: "#FF344EBF" }}>
               Tạo tài khoản
             </Typography>
           </div>
@@ -146,7 +146,7 @@ function SignUp() {
               </Button>
             </Form.Item>
             <Form.Item>
-              <Typography style={{ color: "rgba(0, 0, 0, 0.25)", fontSize: "20px" }}>
+              <Typography style={{ color: "#fff", fontSize: "20px" }}>
                 Đã có tài khoản ? <a onClick={() => navigate("/")}>Đăng Nhập</a>
               </Typography>
             </Form.Item>

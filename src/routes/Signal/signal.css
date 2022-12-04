@@ -11,7 +11,7 @@
 .signal-layout{
   display: flex;
   flex-direction: row;
-  background: #D8F0FC;
+  background: url('/src/assets/img/background.svg') no-repeat;
   background-size: 100%;
 }
 .login-title{margin-bottom: 30px;}

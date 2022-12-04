@@ -8,6 +8,14 @@ import {
   UsergroupAddOutlined,
   SwapOutlined,
 } from "@ant-design/icons";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Slide,
+} from "@mui/material";
 import { Button, Menu, Select, Timeline, Input, Modal } from "antd";
 import {
   HeartFilled,
@@ -34,6 +42,10 @@ import { db, db2 } from "../../firebase-config.js";
 import useWindowDimensions from "../../hook/useWindowHook";
 import informationImage from "../../assets/img/information.png";
 import Title from "antd/lib/skeleton/Title";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+toast.configure();
 const { Text, Link } = Typography;
 const { Option } = Select;
 function checkCondition(sys, dia) {
@@ -51,6 +63,9 @@ function getItem(label, key, icon, children, type) {
   };
 }
 const { confirm } = Modal;
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const items = [
   getItem("Home", "1", <PieChartOutlined />),
@@ -67,9 +82,35 @@ let options = {
   ],
   optionalServices: ["battery_service"],
 };
+async function createAnalyzeObject(obj) {
+  return fetch("http://13.213.12.17:5000/api/predict", {
+    method: "POST",
+    headers: {
+      // Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(obj),
+  }).then((response) => response.json());
+  // .then((data) => {
+  //   console.log("Success:", data);
+  // })
+  // .catch((error) => {
+  //   console.error("Error:", error);
+  // });
+}
 
 const Signal = () => {
   const [collapsed, setCollapsed] = useState(true);
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
+  const [hei, setHei] = useState("");
+  const [weight, setWeight] = useState("");
+  const [sys, setSys] = useState("");
+  const [dia, setDia] = useState("");
+  const [heartrate, setHeartrate] = useState("");
+  const [openDialog, setOpenDialog] = useState(false);
+  const [resultStatus, setResultStatus] = useState("");
+
   const [isRender, setRender] = useState(false);
   const [record, setRecord] = useState({
     sys: 0,
@@ -84,9 +125,9 @@ const Signal = () => {
     Signal3: 0,
   });
   const { height, width } = useWindowDimensions();
-  console.log(height, width);
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
+  const handleChangeGender = (value) => {
+    console.log(value);
+    setGender(value);
   };
   const isResult = sessionStorage.getItem("isResult");
 
@@ -98,7 +139,6 @@ const Signal = () => {
       heart_rate: data.Signal3,
       insert_at: new Date(),
     });
-    console.log(saveRecord);
   };
   useEffect(() => {
     return onValue(
@@ -130,6 +170,39 @@ const Signal = () => {
       },
       onCancel() {},
     });
+  };
+
+  const handleAnalyze = async () => {
+    const analyzeObject = await createAnalyzeObject({
+      gender,
+      age,
+      weight,
+      hei,
+      sys,
+      dia,
+      heartrate,
+    });
+    console.log(analyzeObject);
+    if (analyzeObject.disease !== null) {
+      toast.success("Chẩn đoán thành công!", { autoClose: 1000 });
+      setOpenDialog(true);
+      setResultStatus(analyzeObject.disease);
+    } else {
+      toast.error("Chẩn đoán không thành công!", { autoClose: 1000 });
+    }
+  };
+  const handleCloseDialog = () => {
+    setOpenDialog(!openDialog);
+  };
+  const handleSaveStatus = async () => {
+    const result = await addDoc(historyCollectionRef, {
+      dia: dia,
+      sys: sys,
+      heart_rate: heartrate,
+      insert_at: new Date(),
+    });
+    toast.success("Lưu thành công!", { autoClose: 1000 });
+    setOpenDialog(false);
   };
 
   return (
@@ -311,13 +384,10 @@ const Signal = () => {
                     style={{
                       width: 180,
                     }}
-                    onChange={handleChange}
                   >
-                    <Option value="" disabled selected hidden>
-                      Select Gender
-                    </Option>
-                    <Option value="male">Male</Option>
-                    <Option value="female">Female</Option>
+                    <Option value="">Select Gender</Option>
+                    <Option value="1">Male</Option>
+                    <Option value="0">Female</Option>
                   </Select>
                 </Card>
               </Timeline.Item>
@@ -336,7 +406,7 @@ const Signal = () => {
                     style={{
                       width: 180,
                     }}
-                    onChange={handleChange}
+                    onChange={handleChangeGender}
                   >
                     <Option value="normal">Normal</Option>
                     <Option value="good">Good</Option>
@@ -355,7 +425,6 @@ const Signal = () => {
               type="primary"
               size="small"
               onClick={() => {
-                console.log(data);
                 // setRecord({
                 //   dia: data.Signal1,
                 //   sys: data.Signal2,
@@ -410,6 +479,8 @@ const Signal = () => {
                         placeholder="Vui lòng nhập tuổi"
                         name="age"
                         type="number"
+                        value={age}
+                        onChange={(e) => setAge(e.target.value)}
                         style={{
                           width: 180,
                         }}
@@ -429,16 +500,116 @@ const Signal = () => {
                         style={{
                           width: 180,
                         }}
-                        onChange={handleChange}
+                        onChange={handleChangeGender}
                       >
                         <Option value="" disabled selected hidden>
                           Chọn Giới Tính
                         </Option>
-                        <Option value="male">Nam</Option>
-                        <Option value="female">Nữ</Option>
+                        <Option value="1">Nam</Option>
+                        <Option value="0">Nữ</Option>
                       </Select>
                     </div>
                     <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "68px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography>Chiều cao :</Typography>
+                      <Input
+                        placeholder="Vui lòng nhập chiều cao"
+                        name="hei"
+                        type="number"
+                        value={hei}
+                        onChange={(e) => setHei(e.target.value)}
+                        style={{
+                          width: 180,
+                        }}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "68px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography>Cân nặng :</Typography>
+                      <Input
+                        placeholder="Vui lòng nhập cân nặng"
+                        name="weight"
+                        type="number"
+                        value={weight}
+                        onChange={(e) => setWeight(e.target.value)}
+                        style={{
+                          width: 180,
+                        }}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "68px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography>SYS :</Typography>
+                      <Input
+                        placeholder="Vui lòng nhập sys"
+                        name="sys"
+                        type="number"
+                        value={sys}
+                        onChange={(e) => setSys(e.target.value)}
+                        style={{
+                          width: 180,
+                        }}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "68px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography>DIA :</Typography>
+                      <Input
+                        placeholder="Vui lòng nhập dia"
+                        name="dia"
+                        value={dia}
+                        onChange={(e) => setDia(e.target.value)}
+                        type="number"
+                        style={{
+                          width: 180,
+                        }}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "68px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography>Nhịp tim :</Typography>
+                      <Input
+                        placeholder="Vui lòng nhập nhịp tim"
+                        name="heartrate"
+                        value={heartrate}
+                        onChange={(e) => setHeartrate(e.target.value)}
+                        type="number"
+                        style={{
+                          width: 180,
+                        }}
+                      />
+                    </div>
+                    {/* <div
                       style={{
                         display: "flex",
                         flexDirection: "row",
@@ -463,286 +634,56 @@ const Signal = () => {
                         <Option value="drunk">Say Xỉn</Option>
                         <Option value="smoked">Hút Thuốc</Option>
                       </Select>
-                    </div>
+                    </div> */}
                   </div>
-                  <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 40,
+                    }}
+                  >
                     <Image width={200} src={informationImage} />
+                    <Button
+                      size="large"
+                      style={{
+                        borderRadius: "40px",
+                        color: "#1890ff",
+                        borderColor: "#1890ff",
+                      }}
+                      onClick={handleAnalyze}
+                    >
+                      Chẩn đoán
+                    </Button>
                   </div>
                 </div>
               </Card>
             </Col>
-            <Col xs={24} sm={24} md={24} lg={24}>
+            {/* <Col xs={24} sm={24} md={24} lg={24}>
               <Typography.Title level={2}> Thông số</Typography.Title>
-            </Col>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-around",
-                width: "100%",
-              }}
-            >
-              <Col xs={9} sm={9} md={9} lg={9}>
-                <Card
-                  bordered={true}
-                  style={{
-                    boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-                    marginBottom: "20px",
-                    borderRadius: " 30px",
-                    height: "250px",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap: "10px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "unset",
-                        gap: "20px ",
-                      }}
-                    >
-                      <HeartFilled
-                        style={{
-                          color: "#FA3B3B",
-                          fontSize: "30px",
-                        }}
-                      />
-                      <Typography.Title level={4}> Nhịp tim</Typography.Title>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "10px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography.Title
-                        level={1}
-                        style={{
-                          color: "#EA1F1F",
-                          fontWeight: "800",
-                          fontSize: "100px",
-                        }}
-                      >
-                        {data.Signal3}
-                      </Typography.Title>
-                      <Typography.Title
-                        level={5}
-                        style={{ color: "#EA1F1F", fontWeight: "800" }}
-                      >
-                        (bpm)
-                      </Typography.Title>
-                    </div>
-                  </div>
-                </Card>
-              </Col>
-              {/* <Col xs={4} sm={4} md={4} lg={4}></Col> */}
-              <Col xs={9} sm={9} md={9} lg={9}>
-                <Card
-                  className="info-card"
-                  bordered={true}
-                  style={{
-                    boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-                    marginBottom: "20px",
-                    borderRadius: " 30px",
-                    height: "250px",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "baseline",
-                        gap: "20px ",
-                      }}
-                    >
-                      <Typography.Title level={4}> SYS:</Typography.Title>
-                      <Typography.Title level={1}>
-                        {data.Signal1}
-                      </Typography.Title>
-                      <Typography.Title level={4}>{"mmHg"}</Typography.Title>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "baseline",
-                        gap: "20px ",
-                      }}
-                    >
-                      <Typography.Title level={4}> DIA:</Typography.Title>
-                      <Typography.Title level={1}>
-                        {data.Signal2}
-                      </Typography.Title>
-                      <Typography.Title level={4}>{"mmHg"}</Typography.Title>
-                    </div>
-                  </div>
-                </Card>
-              </Col>
-            </div>
+            </Col> */}
 
             {/* <Col xs={1} sm={1} md={1} lg={1}></Col> */}
-
-            <Button
-              style={{
-                width: "40%",
-                margin: "5rem auto",
-                height: "100px",
-                borderRadius: "40px",
-                color: "#1890ff",
-                borderColor: "#1890ff",
-
-                fontSize: "24px",
-              }}
-              size="large"
-              onClick={() => {
-                sessionStorage.setItem("isResult", true);
-                setRender(true);
-                // setRecord({
-                //   dia: data.Signal1,
-                //   sys: data.Signal2,
-                //   heartRate: data.Signal3,
-                //   insertAt: new Date(),
-                // });
-                // saveRecord(data);
-                // showConfirm(data);
-              }}
-            >
-              Chẩn Đoán
-            </Button>
-            {isResult && (
-              <>
-                <Col xs={24} sm={24} md={24} lg={24}>
-                  <Typography.Title level={2}> Kết Quả</Typography.Title>
-                </Col>
-                <Col xs={24} sm={24} md={24} lg={24}>
-                  <Card
-                    bordered={true}
-                    style={{
-                      width: "60%",
-                      boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-                      marginBottom: "20px",
-                      borderRadius: " 30px",
-                      height: "250px",
-                      margin: "0 auto",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: "40px",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          justifyContent: " space-around",
-                          alignItems: "baseline",
-                          width: "100%",
-                          gap: "20px ",
-                        }}
-                      >
-                        {/* <SmileTwoTone style={{ fontSize: "30px" }} /> */}
-                        <Typography.Title level={2}>
-                          {" "}
-                          Trạng Thái:
-                        </Typography.Title>
-                        <InfoCircleFilled style={{ fontSize: "20px" }} />
-                      </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "10px",
-                          alignItems: "center",
-                        }}
-                      >
-                        <span
-                          style={{
-                            height: "10px",
-                            width: "10px",
-                            fontWeight: "bold",
-                            backgroundColor:
-                              checkCondition(data.Signal2, data.Signal1) ===
-                              "Huyết Áp Thấp"
-                                ? "#7e22ff"
-                                : checkCondition(data.Signal2, data.Signal1) ===
-                                  "Huyết Áp Bình Thường"
-                                ? "#a7e519"
-                                : "#EE2727",
-                            borderRadius: "50%",
-                            display: "inline-block",
-                          }}
-                        ></span>{" "}
-                        <span
-                          style={{
-                            color:
-                              checkCondition(data.Signal2, data.Signal1) ===
-                              "Huyết Áp Thấp"
-                                ? "#7e22ff"
-                                : checkCondition(data.Signal2, data.Signal1) ===
-                                  "Huyết Áp Bình Thường"
-                                ? "#a7e519"
-                                : "#EE2727",
-                            fontWeight: "bold",
-                            fontSize: "40px",
-                          }}
-                        >
-                          {checkCondition(data.Signal2, data.Signal1)}
-                        </span>
-                      </div>
-                    </div>
-                  </Card>
-                </Col>
-
-                <Button
-                  style={{
-                    width: "40%",
-                    margin: "20px auto",
-                    maxWidth: 240,
-                    height: "100px",
-                    borderRadius: "40px",
-                    fontSize: "26px",
-                  }}
-                  type="primary"
-                  size="small"
-                  onClick={() => {
-                    console.log(data);
-                    // setRecord({
-                    //   dia: data.Signal1,
-                    //   sys: data.Signal2,
-                    //   heartRate: data.Signal3,
-                    //   insertAt: new Date(),
-                    // });
-                    // saveRecord(data);
-                    showConfirm(data);
-                  }}
-                >
-                  Save
-                </Button>
-              </>
-            )}
           </Row>
         )}
       </div>
+      <Dialog
+        open={openDialog}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseDialog}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Kết quả chẩn đoán"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            {resultStatus}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleSaveStatus}>Lưu kết quả</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

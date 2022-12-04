@@ -402,9 +402,9 @@ const History = () => {
               <TableRow>
                 <TableCell>Thời gian</TableCell>
                 <TableCell align="right">Nhịp tim</TableCell>
-                <TableCell align="right">SYS&nbsp;(g)</TableCell>
-                <TableCell align="right">DIA&nbsp;(g)</TableCell>
-                <TableCell align="right">Trạng thái&nbsp;(g)</TableCell>
+                <TableCell align="right">SYS&nbsp;(mmHg)</TableCell>
+                <TableCell align="right">DIA&nbsp;(mmHg)</TableCell>
+                <TableCell align="right">Trạng thái</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
