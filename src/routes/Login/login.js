@@ -61,7 +61,7 @@ function Login() {
       <div className="login1-form">
         <div className="login1-form-title">
           <Typography
-            style={{ color: "#D8F0FC", fontSize: 56, fontWeight: "bold" }}
+            style={{ color: "#1F67B1", fontSize: 56, fontWeight: "bold" }}
           >
             Đăng nhập
           </Typography>
@@ -71,7 +71,7 @@ function Login() {
             <div className="login1-form-body-account-input">
               <Typography
                 style={{
-                  color: "#D8F0FC",
+                  color: "#1F67B1",
                   fontSize: 28,
                   fontWeight: 700,
                   marginBottom: "0.25rem",
@@ -85,15 +85,15 @@ function Login() {
                 placeholder=""
                 onChange={(e) => setUsername(e.target.value)}
                 style={{
-                  backgroundColor: "hsla(244, 16%, 92%, .6)",
-                  borderRadius: "8px",
-                  border: "1px solid #fff",
+                  backgroundColor: "rgba(255, 255, 255, 0.37)",
+                  borderRadius: "10px",
+                  border: "none",
                   transition: "border 0.4s",
                 }}
               />
               <Typography
                 style={{
-                  color: "#D8F0FC",
+                  color: "#1F67B1",
                   fontSize: 28,
                   fontWeight: 700,
                   marginBottom: "0.25rem",
@@ -109,9 +109,9 @@ function Login() {
                   placeholder=""
                   onChange={(e) => setPassword(e.target.value)}
                   style={{
-                    backgroundColor: "hsla(244, 16%, 92%, .6)",
-                    borderRadius: "8px",
-                    border: "1px solid #fff",
+                    backgroundColor: "rgba(255, 255, 255, 0.37)",
+                    borderRadius: "10px",
+                    border: "none",
                     transition: "border 0.4s",
                   }}
                 />
