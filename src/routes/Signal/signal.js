@@ -211,7 +211,7 @@ const Signal = () => {
         style={{
           width: "max-content",
           minHeight: "100vh",
-          backgroundColor: "#001529",
+          backgroundColor: "#fff",
         }}
       >
         <Button
@@ -227,7 +227,7 @@ const Signal = () => {
           defaultSelectedKeys={["1"]}
           defaultOpenKeys={["sub1"]}
           mode="inline"
-          theme="dark"
+          theme="light"
           inlineCollapsed={collapsed}
           items={items}
           onClick={(e) => {
@@ -449,7 +449,7 @@ const Signal = () => {
                 style={{
                   boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
                   marginBottom: "20px",
-                  borderRadius: " 40px 0px",
+                  borderRadius: " 40px",
                 }}
               >
                 <div
@@ -490,7 +490,7 @@ const Signal = () => {
                       style={{
                         display: "flex",
                         flexDirection: "row",
-                        gap: "45px",
+                        justifyContent: "space-between",
                         alignItems: "center",
                       }}
                     >
@@ -513,7 +513,7 @@ const Signal = () => {
                       style={{
                         display: "flex",
                         flexDirection: "row",
-                        gap: "68px",
+                        justifyContent: "space-between",
                         alignItems: "center",
                       }}
                     >
@@ -533,7 +533,7 @@ const Signal = () => {
                       style={{
                         display: "flex",
                         flexDirection: "row",
-                        gap: "68px",
+                        justifyContent: "space-between",
                         alignItems: "center",
                       }}
                     >
@@ -553,7 +553,7 @@ const Signal = () => {
                       style={{
                         display: "flex",
                         flexDirection: "row",
-                        gap: "68px",
+                        justifyContent: "space-between",
                         alignItems: "center",
                       }}
                     >
@@ -573,7 +573,7 @@ const Signal = () => {
                       style={{
                         display: "flex",
                         flexDirection: "row",
-                        gap: "68px",
+                        justifyContent: "space-between",
                         alignItems: "center",
                       }}
                     >
@@ -593,7 +593,7 @@ const Signal = () => {
                       style={{
                         display: "flex",
                         flexDirection: "row",
-                        gap: "68px",
+                        justifyContent: "space-between",
                         alignItems: "center",
                       }}
                     >

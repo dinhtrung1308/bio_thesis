@@ -247,7 +247,7 @@ const Relatives = () => {
         style={{
           width: "max-content",
           minHeight: "100vh",
-          backgroundColor: "#001529",
+          backgroundColor: "#fff",
         }}
       >
         <Button
@@ -263,7 +263,7 @@ const Relatives = () => {
           defaultSelectedKeys={["3"]}
           defaultOpenKeys={["sub3"]}
           mode="inline"
-          theme="dark"
+          theme="light"
           inlineCollapsed={collapsed}
           items={items}
           onClick={(e) => {
