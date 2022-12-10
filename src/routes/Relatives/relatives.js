@@ -6,7 +6,9 @@ import {
   PieChartOutlined,
   UsergroupAddOutlined,
   UserOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
+import logo from "../../assets/img/logo.png";
 import { Button, Menu } from "antd";
 import React, { useState } from "react";
 import "./relative.css";
@@ -34,7 +36,7 @@ import {
   doc,
 } from "firebase/firestore";
 import { db, db2 } from "../../firebase-config.js";
-import { useNavigate } from "react-router-dom";
+import { NavLink,useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
@@ -50,11 +52,33 @@ function getItem(label, key, icon, children, type) {
   };
 }
 
-const items = [
-  getItem("Home", "1", <PieChartOutlined />),
-  getItem("History", "2", <ReconciliationOutlined />),
-  getItem("Family", "3", <UsergroupAddOutlined />),
-];
+let activeLink = "link active";
+let normalLink = "link";
+
+// const items = [
+//   getItem("Home", "1", <PieChartOutlined />),
+//   getItem("History", "2", <ReconciliationOutlined />),
+//   getItem("Family", "3", <UsergroupAddOutlined />),
+// ];
+
+const menuItems = [
+  {
+    text: "Dashboard",
+    path: "/signal",
+    icon: <PieChartOutlined />
+  },
+  {
+    text: "History",
+    path: "/history",
+    icon: <ReconciliationOutlined />
+  },
+  {
+    text: "Relatives",
+    path: "/relatives",
+    icon: <UsergroupAddOutlined />
+  }
+]
+
 const list = [
   {
     name: {
@@ -214,19 +238,8 @@ const Relatives = () => {
   const [phoneNumber, setPhoneNumber] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   let navigate = useNavigate();
-
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
-  function navigateToTab2(e) {
-    if (e.key === "1") {
-      navigate("/signal");
-    } else if (e.key === "2") {
-      navigate("/history");
-    }
-  }
 
   function showModal() {
     setIsModalOpen(true);
@@ -243,34 +256,46 @@ const Relatives = () => {
 
   return (
     <div className="relative-layout">
-      <div
-        style={{
-          width: "max-content",
-          minHeight: "100vh",
-          backgroundColor: "#fff",
-        }}
-      >
-        <Button
-          type="primary"
-          onClick={toggleCollapsed}
-          style={{
-            marginBottom: 16,
-          }}
-        >
-          {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-        </Button>
-        <Menu
-          defaultSelectedKeys={["3"]}
-          defaultOpenKeys={["sub3"]}
-          mode="inline"
-          theme="light"
-          inlineCollapsed={collapsed}
-          items={items}
-          onClick={(e) => {
-            navigateToTab2(e);
-          }}
-        />
+      {/* Sidebar */}
+      <div className={collapsed? "sidebar-container" :"sidebar-container close"}>
+        <div className="top">
+          <div className="logoDiv">
+            <div className="logo-img">
+              <img src={logo} alt="logo"/>
+            </div>
+            <div className="logo-text">
+              <span className="name">BioThesis</span>
+              <span className="application">Application</span>
+            </div>
+          </div>
+          <button onClick={() =>setCollapsed(!collapsed)} className={collapsed? "toggle toggle-in" : "toggle toggle-out"}>
+              <span></span>
+              <span></span>
+              <span></span>
+          </button>
+        </div>
+
+        <div className="menu">
+            <div className="top-content">
+              {menuItems.map((item, index) => (
+                  <NavLink to={item.path} key={index} className={({ isActive }) => isActive ? activeLink : normalLink}>
+                      <div className="icon">{item.icon}</div>
+                      <div className="text">{item.text}</div>
+                  </NavLink>
+              ))}
+            </div>
+
+            <div className="bottom-content" >
+              <NavLink to="/logout" className="link logout">
+                  <div className="icon"><LogoutOutlined /></div>
+                  <div className="text">Log Out</div>
+              </NavLink>
+            </div>
+        </div>
+        
       </div>
+
+      {/* Content */}
       <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
         <div style={{ marginTop: "10px", marginLeft: "10px" }}>
           <Title level={2}>Family</Title>
@@ -312,7 +337,7 @@ const Relatives = () => {
             itemLayout="horizontal"
             dataSource={list}
             renderItem={(item) => (
-              <List.Item actions={[<a key="list-loadmore-edit">></a>]}>
+              <List.Item actions={[<a key="list-loadmore-edit"></a>]}>
                 <Skeleton avatar title={false} loading={item.loading} active>
                   <List.Item.Meta
                     avatar={<Avatar src={item.picture?.large} />}

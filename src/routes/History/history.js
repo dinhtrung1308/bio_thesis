@@ -5,7 +5,9 @@ import {
   MenuUnfoldOutlined,
   PieChartOutlined,
   UsergroupAddOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
+import logo from "../../assets/img/logo.png";
 import { Button, Menu } from "antd";
 import moment from "moment";
 import React, { useState, useEffect } from "react";
@@ -39,7 +41,7 @@ import {
 } from "firebase/firestore";
 import { db, db2 } from "../../firebase-config.js";
 
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 Chart.register(...registerables);
 
 const { Title } = Typography;
@@ -50,6 +52,9 @@ const currentDate = moment().format("DD-MM-YYYY").split("-");
 const currentDay = currentDate[0];
 const currentMonth = currentDate[1];
 const currentYear = currentDate[2];
+
+let activeLink = "link active";
+let normalLink = "link";
 
 function getItem(label, key, icon, children, type) {
   return {
@@ -125,11 +130,23 @@ function calculateAverageHeartRate(data) {
   return avg;
 }
 
-const items = [
-  getItem("Home", "1", <PieChartOutlined />),
-  getItem("History", "2", <ReconciliationOutlined />),
-  getItem("Family", "3", <UsergroupAddOutlined />),
-];
+const menuItems = [
+  {
+    text: "Dashboard",
+    path: "/signal",
+    icon: <PieChartOutlined />
+  },
+  {
+    text: "History",
+    path: "/history",
+    icon: <ReconciliationOutlined />
+  },
+  {
+    text: "Relatives",
+    path: "/relatives",
+    icon: <UsergroupAddOutlined />
+  }
+]
 const options = {
   responsive: true,
   plugins: {
@@ -144,7 +161,7 @@ const options = {
 };
 
 const History = () => {
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const [record, setRecord] = useState([]);
   const [open, setOpen] = useState(false);
   let navigate = useNavigate();
@@ -173,53 +190,56 @@ const History = () => {
 
     getUsers();
   }, []);
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
+
   const showDetail = () => {
     setOpen(!open);
   };
   const handleCancel = () => {
     setOpen(false);
   };
-  function navigateToTab2(e) {
-    if (e.key === "1") {
-      navigate("/signal");
-    } else if (e.key === "3") {
-      navigate("/relatives");
-    }
-  }
 
   return (
     <div className="history-layout">
-      <div
-        style={{
-          width: "max-content",
-          minHeight: "100vh",
-          backgroundColor: "#fff",
-        }}
-      >
-        <Button
-          type="primary"
-          onClick={toggleCollapsed}
-          style={{
-            marginBottom: 16,
-          }}
-        >
-          {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-        </Button>
-        <Menu
-          defaultSelectedKeys={["2"]}
-          defaultOpenKeys={["sub2"]}
-          mode="inline"
-          theme="light"
-          inlineCollapsed={collapsed}
-          items={items}
-          onClick={(e) => {
-            navigateToTab2(e);
-          }}
-        />
+      {/* Sidebar */}
+      <div className={collapsed? "sidebar-container" :"sidebar-container close"}>
+        <div className="top">
+          <div className="logoDiv">
+            <div className="logo-img">
+              <img src={logo} alt="logo"/>
+            </div>
+            <div className="logo-text">
+              <span className="name">BioThesis</span>
+              <span className="application">Application</span>
+            </div>
+          </div>
+          <button onClick={() =>setCollapsed(!collapsed)} className={collapsed? "toggle toggle-in" : "toggle toggle-out"}>
+              <span></span>
+              <span></span>
+              <span></span>
+          </button>
+        </div>
+
+        <div className="menu">
+            <div className="top-content">
+              {menuItems.map((item, index) => (
+                  <NavLink to={item.path} key={index} className={({ isActive }) => isActive ? activeLink : normalLink}>
+                      <div className="icon">{item.icon}</div>
+                      <div className="text">{item.text}</div>
+                  </NavLink>
+              ))}
+            </div>
+
+            <div className="bottom-content" >
+              <NavLink to="/logout" className="link logout">
+                  <div className="icon"><LogoutOutlined /></div>
+                  <div className="text">Log Out</div>
+              </NavLink>
+            </div>
+        </div>
+        
       </div>
+
+      {/* Content */}
       <div
         style={{
           width: "100%",

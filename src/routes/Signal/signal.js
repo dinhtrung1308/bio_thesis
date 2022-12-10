@@ -1,4 +1,5 @@
 import bluetoothIcon from "../../assets/img/bluetoothicon.svg";
+import logo from "../../assets/img/logo.png";
 import {
   ContainerOutlined,
   ReconciliationOutlined,
@@ -7,6 +8,9 @@ import {
   PieChartOutlined,
   UsergroupAddOutlined,
   SwapOutlined,
+  RightOutlined,
+  LeftOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import {
   Dialog,
@@ -27,7 +31,7 @@ import "./signal.css";
 import { Space, Typography } from "antd";
 import { Col, Row, Image } from "antd";
 import { Card } from "antd";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { ref, onValue, push, update, remove } from "firebase/database";
 import {
   collection,
@@ -67,11 +71,24 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const items = [
-  getItem("Home", "1", <PieChartOutlined />),
-  getItem("History", "2", <ReconciliationOutlined />),
-  getItem("Family", "3", <UsergroupAddOutlined />),
-];
+const menuItems = [
+  {
+    text: "Dashboard",
+    path: "/signal",
+    icon: <PieChartOutlined />
+  },
+  {
+    text: "History",
+    path: "/history",
+    icon: <ReconciliationOutlined />
+  },
+  {
+    text: "Relatives",
+    path: "/relatives",
+    icon: <UsergroupAddOutlined />
+  }
+]
+
 let options = {
   filters: [
     { services: ["heart_rate"] },
@@ -100,7 +117,7 @@ async function createAnalyzeObject(obj) {
 }
 
 const Signal = () => {
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [hei, setHei] = useState("");
@@ -150,9 +167,10 @@ const Signal = () => {
       }
     );
   }, []);
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
+
+  let activeLink = "link active";
+  let normalLink = "link";
+
   function navigateToTab2(e) {
     if (e.key === "2") {
       navigate("/history");
@@ -207,33 +225,42 @@ const Signal = () => {
 
   return (
     <div className="signal-layout">
-      <div
-        style={{
-          width: "max-content",
-          minHeight: "100vh",
-          backgroundColor: "#fff",
-        }}
-      >
-        <Button
-          type="primary"
-          onClick={toggleCollapsed}
-          style={{
-            marginBottom: 16,
-          }}
-        >
-          {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-        </Button>
-        <Menu
-          defaultSelectedKeys={["1"]}
-          defaultOpenKeys={["sub1"]}
-          mode="inline"
-          theme="light"
-          inlineCollapsed={collapsed}
-          items={items}
-          onClick={(e) => {
-            navigateToTab2(e);
-          }}
-        />
+      <div className={collapsed? "sidebar-container" :"sidebar-container close"}>
+        <div className="top">
+          <div className="logoDiv">
+            <div className="logo-img">
+              <img src={logo} alt="logo"/>
+            </div>
+            <div className="logo-text">
+              <span className="name">BioThesis</span>
+              <span className="application">Application</span>
+            </div>
+          </div>
+          <button onClick={() =>setCollapsed(!collapsed)} className={collapsed? "toggle toggle-in" : "toggle toggle-out"}>
+              <span></span>
+              <span></span>
+              <span></span>
+          </button>
+        </div>
+
+        <div className="menu">
+            <div className="top-content">
+              {menuItems.map((item, index) => (
+                  <NavLink to={item.path} key={index} className={({ isActive }) => isActive ? activeLink : normalLink}>
+                      <div className="icon">{item.icon}</div>
+                      <div className="text">{item.text}</div>
+                  </NavLink>
+              ))}
+            </div>
+
+            <div className="bottom-content" >
+              <NavLink to="/logout" className="link logout">
+                  <div className="icon"><LogoutOutlined /></div>
+                  <div className="text">Log Out</div>
+              </NavLink>
+            </div>
+        </div>
+        
       </div>
       <div
         style={{
