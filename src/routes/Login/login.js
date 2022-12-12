@@ -153,7 +153,10 @@ function Login() {
             <div className="login-form-body-account-extra"></div>
           </div>
 
-          <div className="login-form-body-account">
+          <div
+            className="login-form-body-account"
+            style={{ width: "fit-content", margin: "0 auto" }}
+          >
             <Typography
               style={{ color: "rgba(0, 0, 0, 0.25)", fontSize: "18px" }}
             >

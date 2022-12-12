@@ -77,8 +77,9 @@ function SignUp() {
       <img src={background} className="signup-img" />
       <div className="signup-form">
         <div className="signup-form-title">
-          <Typography 
-          style={{ color: "#1F67B1", fontSize: 56, fontWeight: "bold" }}>
+          <Typography
+            style={{ color: "#1F67B1", fontSize: 56, fontWeight: "bold" }}
+          >
             Tạo tài khoản
           </Typography>
         </div>
@@ -86,9 +87,13 @@ function SignUp() {
           <Form
             name="register"
             layout="vertical"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+            }}
             onFinish={addUser}
           >
-
             {/* SĐT */}
             <Form.Item
               label="SĐT"
@@ -103,10 +108,11 @@ function SignUp() {
                 size="large"
                 placeholder="SĐT"
                 prefix={<UserOutlined className="site-form-item-icon" />}
-                style={{ 
+                style={{
                   borderRadius: "10px",
-                  border:"none", 
-                  height: 50 }}
+                  border: "none",
+                  height: 50,
+                }}
                 onChange={(e) => {
                   setUserName(e.target.value);
                 }}
@@ -127,10 +133,11 @@ function SignUp() {
                 size="large"
                 placeholder="Email"
                 prefix={<MailOutlined className="site-form-item-icon" />}
-                style={{ 
+                style={{
                   borderRadius: "10px",
-                  border:"none", 
-                  height: 50 }}
+                  border: "none",
+                  height: 50,
+                }}
                 onChange={(e) => {
                   setEmail(e.target.value);
                 }}
@@ -151,10 +158,11 @@ function SignUp() {
                 size="large"
                 placeholder="Mật khẩu"
                 prefix={<LockOutlined className="site-form-item-icon" />}
-                style={{ 
+                style={{
                   borderRadius: "10px",
-                  border:"none", 
-                  height: 50 }}
+                  border: "none",
+                  height: 50,
+                }}
                 type="password"
                 onChange={(e) => {
                   setPassword(e.target.value);
@@ -166,7 +174,7 @@ function SignUp() {
             <Form.Item>
               <Button
                 className="signup-button"
-                style={{ 
+                style={{
                   backgroundColor: "rgba(255, 52, 78, 0.75)",
                   borderRadius: "40px",
                   padding: "14px 2rem",
@@ -184,12 +192,23 @@ function SignUp() {
                 Đăng ký
               </Button>
             </Form.Item>
-            <Form.Item>
-              <Typography style={{ 
-                color: "rgba(0, 0, 0, 0.25)", 
-                fontSize: "18px",
-              }}>
-                Đã có tài khoản ? <a style={{ color: "rgba(255, 52, 78, 0.75)", cursor: "pointer" }} onClick={() => navigate("/")}>Đăng Nhập</a>
+            <Form.Item style={{ width: "fit-content", margin: "0 auto" }}>
+              <Typography
+                style={{
+                  color: "rgba(0, 0, 0, 0.25)",
+                  fontSize: "18px",
+                }}
+              >
+                Đã có tài khoản ?{" "}
+                <a
+                  style={{
+                    color: "rgba(255, 52, 78, 0.75)",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => navigate("/")}
+                >
+                  Đăng Nhập
+                </a>
               </Typography>
             </Form.Item>
           </Form>

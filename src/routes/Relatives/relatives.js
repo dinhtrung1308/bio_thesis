@@ -36,7 +36,7 @@ import {
   doc,
 } from "firebase/firestore";
 import { db, db2 } from "../../firebase-config.js";
-import { NavLink,useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
@@ -65,19 +65,19 @@ const menuItems = [
   {
     text: "Dashboard",
     path: "/signal",
-    icon: <PieChartOutlined />
+    icon: <PieChartOutlined />,
   },
   {
     text: "History",
     path: "/history",
-    icon: <ReconciliationOutlined />
+    icon: <ReconciliationOutlined />,
   },
   {
     text: "Relatives",
     path: "/relatives",
-    icon: <UsergroupAddOutlined />
-  }
-]
+    icon: <UsergroupAddOutlined />,
+  },
+];
 
 const list = [
   {
@@ -257,42 +257,54 @@ const Relatives = () => {
   return (
     <div className="relative-layout">
       {/* Sidebar */}
-      <div className={collapsed? "sidebar-container" :"sidebar-container close"}>
+      <div
+        className={collapsed ? "sidebar-container" : "sidebar-container close"}
+      >
         <div className="top">
           <div className="logoDiv">
             <div className="logo-img">
-              <img src={logo} alt="logo"/>
+              <img src={logo} alt="logo" />
             </div>
             <div className="logo-text">
               <span className="name">BioThesis</span>
               <span className="application">Application</span>
             </div>
           </div>
-          <button onClick={() =>setCollapsed(!collapsed)} className={collapsed? "toggle toggle-in" : "toggle toggle-out"}>
-              <span></span>
-              <span></span>
-              <span></span>
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className={collapsed ? "toggle toggle-in" : "toggle toggle-out"}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
           </button>
         </div>
 
         <div className="menu">
-            <div className="top-content">
-              {menuItems.map((item, index) => (
-                  <NavLink to={item.path} key={index} className={({ isActive }) => isActive ? activeLink : normalLink}>
-                      <div className="icon">{item.icon}</div>
-                      <div className="text">{item.text}</div>
-                  </NavLink>
-              ))}
-            </div>
-
-            <div className="bottom-content" >
-              <NavLink to="/logout" className="link logout">
-                  <div className="icon"><LogoutOutlined /></div>
-                  <div className="text">Log Out</div>
+          <div className="top-content">
+            {menuItems.map((item, index) => (
+              <NavLink
+                to={item.path}
+                key={index}
+                className={({ isActive }) =>
+                  isActive ? activeLink : normalLink
+                }
+              >
+                <div className="icon">{item.icon}</div>
+                <div className="text">{item.text}</div>
               </NavLink>
-            </div>
+            ))}
+          </div>
+
+          <div className="bottom-content">
+            <NavLink to="/" className="link logout">
+              <div className="icon">
+                <LogoutOutlined />
+              </div>
+              <div className="text">Log Out</div>
+            </NavLink>
+          </div>
         </div>
-        
       </div>
 
       {/* Content */}

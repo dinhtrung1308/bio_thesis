@@ -47,6 +47,7 @@ import useWindowDimensions from "../../hook/useWindowHook";
 import informationImage from "../../assets/img/information.png";
 import Title from "antd/lib/skeleton/Title";
 import { ToastContainer, toast } from "react-toastify";
+import { PREDICT_API } from "../../api/index";
 import "react-toastify/dist/ReactToastify.css";
 
 toast.configure();
@@ -75,19 +76,19 @@ const menuItems = [
   {
     text: "Dashboard",
     path: "/signal",
-    icon: <PieChartOutlined />
+    icon: <PieChartOutlined />,
   },
   {
     text: "History",
     path: "/history",
-    icon: <ReconciliationOutlined />
+    icon: <ReconciliationOutlined />,
   },
   {
     text: "Relatives",
     path: "/relatives",
-    icon: <UsergroupAddOutlined />
-  }
-]
+    icon: <UsergroupAddOutlined />,
+  },
+];
 
 let options = {
   filters: [
@@ -100,7 +101,7 @@ let options = {
   optionalServices: ["battery_service"],
 };
 async function createAnalyzeObject(obj) {
-  return fetch("http://13.213.12.17:5000/api/predict", {
+  return fetch(PREDICT_API, {
     method: "POST",
     headers: {
       // Authorization: `Bearer ${token}`,
@@ -217,6 +218,7 @@ const Signal = () => {
       dia: dia,
       sys: sys,
       heart_rate: heartrate,
+      condition: resultStatus,
       insert_at: new Date(),
     });
     toast.success("Lưu thành công!", { autoClose: 1000 });
@@ -225,42 +227,54 @@ const Signal = () => {
 
   return (
     <div className="signal-layout">
-      <div className={collapsed? "sidebar-container" :"sidebar-container close"}>
+      <div
+        className={collapsed ? "sidebar-container" : "sidebar-container close"}
+      >
         <div className="top">
           <div className="logoDiv">
             <div className="logo-img">
-              <img src={logo} alt="logo"/>
+              <img src={logo} alt="logo" />
             </div>
             <div className="logo-text">
               <span className="name">BioThesis</span>
               <span className="application">Application</span>
             </div>
           </div>
-          <button onClick={() =>setCollapsed(!collapsed)} className={collapsed? "toggle toggle-in" : "toggle toggle-out"}>
-              <span></span>
-              <span></span>
-              <span></span>
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className={collapsed ? "toggle toggle-in" : "toggle toggle-out"}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
           </button>
         </div>
 
         <div className="menu">
-            <div className="top-content">
-              {menuItems.map((item, index) => (
-                  <NavLink to={item.path} key={index} className={({ isActive }) => isActive ? activeLink : normalLink}>
-                      <div className="icon">{item.icon}</div>
-                      <div className="text">{item.text}</div>
-                  </NavLink>
-              ))}
-            </div>
-
-            <div className="bottom-content" >
-              <NavLink to="/logout" className="link logout">
-                  <div className="icon"><LogoutOutlined /></div>
-                  <div className="text">Log Out</div>
+          <div className="top-content">
+            {menuItems.map((item, index) => (
+              <NavLink
+                to={item.path}
+                key={index}
+                className={({ isActive }) =>
+                  isActive ? activeLink : normalLink
+                }
+              >
+                <div className="icon">{item.icon}</div>
+                <div className="text">{item.text}</div>
               </NavLink>
-            </div>
+            ))}
+          </div>
+
+          <div className="bottom-content">
+            <NavLink to="/" className="link logout">
+              <div className="icon">
+                <LogoutOutlined />
+              </div>
+              <div className="text">Log Out</div>
+            </NavLink>
+          </div>
         </div>
-        
       </div>
       <div
         style={{
@@ -501,7 +515,7 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography>Tuổi :</Typography>
+                      <Typography style={{ fontSize: 20 }}>Tuổi :</Typography>
                       <Input
                         placeholder="Vui lòng nhập tuổi"
                         name="age"
@@ -511,6 +525,7 @@ const Signal = () => {
                         style={{
                           width: 180,
                         }}
+                        required
                       />
                     </div>
                     <div
@@ -521,13 +536,16 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography>Giới tính :</Typography>
+                      <Typography style={{ fontSize: 20 }}>
+                        Giới tính :
+                      </Typography>
                       <Select
                         defaultValue=""
                         style={{
                           width: 180,
                         }}
                         onChange={handleChangeGender}
+                        required
                       >
                         <Option value="" disabled selected hidden>
                           Chọn Giới Tính
@@ -544,7 +562,9 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography>Chiều cao :</Typography>
+                      <Typography style={{ fontSize: 20 }}>
+                        Chiều cao :
+                      </Typography>
                       <Input
                         placeholder="Vui lòng nhập chiều cao"
                         name="hei"
@@ -554,6 +574,7 @@ const Signal = () => {
                         style={{
                           width: 180,
                         }}
+                        required
                       />
                     </div>
                     <div
@@ -564,7 +585,9 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography>Cân nặng :</Typography>
+                      <Typography style={{ fontSize: 20 }}>
+                        Cân nặng :
+                      </Typography>
                       <Input
                         placeholder="Vui lòng nhập cân nặng"
                         name="weight"
@@ -574,6 +597,7 @@ const Signal = () => {
                         style={{
                           width: 180,
                         }}
+                        required
                       />
                     </div>
                     <div
@@ -584,7 +608,9 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography>SYS :</Typography>
+                      <Typography style={{ fontSize: 20, fontWeight: "bold" }}>
+                        SYS :
+                      </Typography>
                       <Input
                         placeholder="Vui lòng nhập sys"
                         name="sys"
@@ -594,6 +620,7 @@ const Signal = () => {
                         style={{
                           width: 180,
                         }}
+                        required
                       />
                     </div>
                     <div
@@ -604,7 +631,9 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography>DIA :</Typography>
+                      <Typography style={{ fontSize: 20, fontWeight: "bold" }}>
+                        DIA :
+                      </Typography>
                       <Input
                         placeholder="Vui lòng nhập dia"
                         name="dia"
@@ -614,6 +643,7 @@ const Signal = () => {
                         style={{
                           width: 180,
                         }}
+                        required
                       />
                     </div>
                     <div
@@ -624,7 +654,9 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography>Nhịp tim :</Typography>
+                      <Typography style={{ fontSize: 20, fontWeight: "bold" }}>
+                        Nhịp tim :
+                      </Typography>
                       <Input
                         placeholder="Vui lòng nhập nhịp tim"
                         name="heartrate"
@@ -634,6 +666,7 @@ const Signal = () => {
                         style={{
                           width: 180,
                         }}
+                        required
                       />
                     </div>
                     {/* <div
@@ -670,13 +703,15 @@ const Signal = () => {
                       gap: 40,
                     }}
                   >
-                    <Image width={200} src={informationImage} />
+                    <Image width={300} src={informationImage} />
                     <Button
                       size="large"
                       style={{
+                        height: 60,
                         borderRadius: "40px",
                         color: "#1890ff",
                         borderColor: "#1890ff",
+                        fontSize: 28,
                       }}
                       onClick={handleAnalyze}
                     >
