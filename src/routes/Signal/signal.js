@@ -474,10 +474,10 @@ const Signal = () => {
           </div>
         )}
         {width >= 750 && (
-          <Row style={{ padding: "1rem 10rem" }}>
-            <Col xs={24} sm={24} md={24} lg={24}>
+          <Row style={{ padding: "2rem 5rem 0 10rem" }}>
+            {/* <Col xs={24} sm={24} md={24} lg={24}>
               <Typography.Title level={2}> Hồ sơ cá nhân</Typography.Title>
-            </Col>
+            </Col> */}
             <Col xs={12} sm={12} md={24} lg={24}>
               <Card
                 bordered={true}
@@ -677,6 +677,7 @@ const Signal = () => {
                       gap: 40,
                     }}
                   >
+                    <Typography.Title level={1}> Hồ sơ cá nhân</Typography.Title>
                     <Image width={300} src={informationImage} />
                     <button 
                       className="diagnose-btn"
