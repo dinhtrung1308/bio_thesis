@@ -466,12 +466,6 @@ const Signal = () => {
               type="primary"
               size="small"
               onClick={() => {
-                // setRecord({
-                //   dia: data.Signal1,
-                //   sys: data.Signal2,
-                //   heartRate: data.Signal3,
-                //   insertAt: new Date(),
-                // });
                 saveRecord(data);
               }}
             >
@@ -480,7 +474,7 @@ const Signal = () => {
           </div>
         )}
         {width >= 750 && (
-          <Row style={{ marginBottom: "40px", padding: "4rem 10rem" }}>
+          <Row style={{ padding: "1rem 10rem" }}>
             <Col xs={24} sm={24} md={24} lg={24}>
               <Typography.Title level={2}> Hồ sơ cá nhân</Typography.Title>
             </Col>
@@ -515,18 +509,19 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography style={{ fontSize: 20 }}>Tuổi :</Typography>
-                      <Input
-                        placeholder="Vui lòng nhập tuổi"
-                        name="age"
-                        type="number"
-                        value={age}
-                        onChange={(e) => setAge(e.target.value)}
-                        style={{
-                          width: 180,
-                        }}
-                        required
-                      />
+                      <Typography style={{ fontSize: 20 , color: "rgba(31, 103, 177, 1)"}}>Tuổi :</Typography>
+                      <label className="input-field">
+                        <input
+                          name="age"
+                          type="number"
+                          value={age}
+                          onChange={(e) => setAge(e.target.value)}
+                          required
+                        />
+                        <span className="placeholder">Vui lòng nhập số tuổi</span>
+                        <span className="border"></span>
+                      </label>
+
                     </div>
                     <div
                       style={{
@@ -536,23 +531,27 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography style={{ fontSize: 20 }}>
+                      <Typography style={{ fontSize: 20, color: "rgba(31, 103, 177, 1)" }}>
                         Giới tính :
                       </Typography>
-                      <Select
+                      <select
                         defaultValue=""
                         style={{
+                          background: "rgba(128, 128, 128, 0.1)",
+                          color: "rgba(0, 0, 0, 0.25)",
+                          outline: "none",
                           width: 180,
                         }}
                         onChange={handleChangeGender}
                         required
                       >
-                        <Option value="" disabled selected hidden>
+                        <option value="" 
+                        disabled selected hidden>
                           Chọn Giới Tính
-                        </Option>
-                        <Option value="1">Nam</Option>
-                        <Option value="0">Nữ</Option>
-                      </Select>
+                        </option>
+                        <option value="1">Nam</option>
+                        <option value="0">Nữ</option>
+                      </select>
                     </div>
                     <div
                       style={{
@@ -562,20 +561,20 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography style={{ fontSize: 20 }}>
+                      <Typography style={{ fontSize: 20, color: "rgba(31, 103, 177, 1)"}}>
                         Chiều cao :
                       </Typography>
-                      <Input
-                        placeholder="Vui lòng nhập chiều cao"
-                        name="hei"
-                        type="number"
-                        value={hei}
-                        onChange={(e) => setHei(e.target.value)}
-                        style={{
-                          width: 180,
-                        }}
-                        required
-                      />
+                      <label className="input-field">
+                        <input
+                          name="hei"
+                          type="number"
+                          value={hei}
+                          onChange={(e) => setHei(e.target.value)}
+                          required
+                        />
+                        <span className="placeholder">Vui lòng nhập chiều cao</span>
+                        <span className="border"></span>
+                      </label>
                     </div>
                     <div
                       style={{
@@ -585,20 +584,20 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography style={{ fontSize: 20 }}>
+                      <Typography style={{ fontSize: 20, color: "rgba(31, 103, 177, 1)" }}>
                         Cân nặng :
                       </Typography>
-                      <Input
-                        placeholder="Vui lòng nhập cân nặng"
-                        name="weight"
-                        type="number"
-                        value={weight}
-                        onChange={(e) => setWeight(e.target.value)}
-                        style={{
-                          width: 180,
-                        }}
-                        required
-                      />
+                      <label className="input-field">
+                        <input
+                          name="weight"
+                          type="number"
+                          value={weight}
+                          onChange={(e) => setWeight(e.target.value)}
+                          required
+                        />
+                        <span className="placeholder">Vui lòng nhập cân nặng</span>
+                        <span className="border"></span>
+                      </label>
                     </div>
                     <div
                       style={{
@@ -608,20 +607,20 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography style={{ fontSize: 20, fontWeight: "bold" }}>
+                      <Typography style={{ fontSize: 20, fontWeight: "bold", color: "rgba(31, 103, 177, 1)" }}>
                         SYS :
                       </Typography>
-                      <Input
-                        placeholder="Vui lòng nhập sys"
-                        name="sys"
-                        type="number"
-                        value={sys}
-                        onChange={(e) => setSys(e.target.value)}
-                        style={{
-                          width: 180,
-                        }}
-                        required
-                      />
+                      <label className="input-field">
+                        <input
+                          name="sys"
+                          type="number"
+                          value={sys}
+                          onChange={(e) => setSys(e.target.value)}
+                          required
+                        />
+                        <span className="placeholder">Vui lòng nhập sys</span>
+                        <span className="border"></span>
+                      </label>
                     </div>
                     <div
                       style={{
@@ -631,20 +630,20 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography style={{ fontSize: 20, fontWeight: "bold" }}>
+                      <Typography style={{ fontSize: 20, fontWeight: "bold", color: "rgba(31, 103, 177, 1)" }}>
                         DIA :
                       </Typography>
-                      <Input
-                        placeholder="Vui lòng nhập dia"
-                        name="dia"
-                        value={dia}
-                        onChange={(e) => setDia(e.target.value)}
-                        type="number"
-                        style={{
-                          width: 180,
-                        }}
-                        required
-                      />
+                      <label className="input-field">
+                        <input
+                          name="dia"
+                          value={dia}
+                          onChange={(e) => setDia(e.target.value)}
+                          type="number"
+                          required
+                        />
+                        <span className="placeholder">Vui lòng nhập dia</span>
+                        <span className="border"></span>
+                      </label>
                     </div>
                     <div
                       style={{
@@ -654,78 +653,41 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography style={{ fontSize: 20, fontWeight: "bold" }}>
+                      <Typography style={{ fontSize: 20, fontWeight: "bold", color: "rgba(31, 103, 177, 1)" }}>
                         Nhịp tim :
                       </Typography>
-                      <Input
-                        placeholder="Vui lòng nhập nhịp tim"
-                        name="heartrate"
-                        value={heartrate}
-                        onChange={(e) => setHeartrate(e.target.value)}
-                        type="number"
-                        style={{
-                          width: 180,
-                        }}
-                        required
-                      />
+                      <label className="input-field">
+                        <input
+                          name="heartrate"
+                          value={heartrate}
+                          onChange={(e) => setHeartrate(e.target.value)}
+                          type="number"
+                          required
+                        />
+                        <span className="placeholder">Vui lòng nhập nhịp tim</span>
+                        <span className="border"></span>
+                      </label>
                     </div>
-                    {/* <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: "30px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography>Tình trạng :</Typography>
-
-                      <Select
-                        defaultValue="normal"
-                        style={{
-                          width: 180,
-                        }}
-                        onChange={handleChange}
-                      >
-                        <Option value="normal">Bình Thường</Option>
-                        <Option value="good">Tốt</Option>
-                        <Option value="bad">Không Khỏe</Option>
-                        <Option value="stressed">Căng Thẳng</Option>
-                        <Option value="troubleeating">Khó Ăn</Option>
-                        <Option value="drunk">Say Xỉn</Option>
-                        <Option value="smoked">Hút Thuốc</Option>
-                      </Select>
-                    </div> */}
                   </div>
                   <div
                     style={{
                       display: "flex",
                       flexDirection: "column",
+                      alignItems: "center",
                       gap: 40,
                     }}
                   >
                     <Image width={300} src={informationImage} />
-                    <Button
-                      size="large"
-                      style={{
-                        height: 60,
-                        borderRadius: "40px",
-                        color: "#1890ff",
-                        borderColor: "#1890ff",
-                        fontSize: 28,
-                      }}
+                    <button 
+                      className="diagnose-btn"
                       onClick={handleAnalyze}
                     >
-                      Chẩn đoán
-                    </Button>
+                      Chuẩn đoán
+                    </button>
                   </div>
                 </div>
               </Card>
             </Col>
-            {/* <Col xs={24} sm={24} md={24} lg={24}>
-              <Typography.Title level={2}> Thông số</Typography.Title>
-            </Col> */}
-
-            {/* <Col xs={1} sm={1} md={1} lg={1}></Col> */}
           </Row>
         )}
       </div>
