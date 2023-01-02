@@ -186,7 +186,7 @@ const History = () => {
     const getUsers = async () => {
       const data = await getDocs(q);
       console.log(data);
-      setRecord(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      setRecord(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })) || []);
     };
 
     getUsers();
@@ -259,25 +259,21 @@ const History = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          marginBottom: "20px",
-          padding: "2rem 5rem 0 10rem"
+          paddingBottom: "20px",
         }}
       >
-        <div style={{ padding: "2rem", color: "rgba(31, 103, 177, 1)" }}>
-          <Title level={1}>Lịch Sử</Title>
+        <div style={{ marginTop: "10px", marginLeft: "10px" }}>
+          <Title level={2}>Lịch Sử</Title>
         </div>
+        <Divider />
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            background: "rgba(255, 255, 255, 0.7)",
-            padding: "52px 36px",
-            borderRadius: "30px", 
-            boxShadow: "10px 10px 40px rgba(0, 0, 0, 0.1)"
           }}
         >
-          <Typography.Title level={2} style={{ alignSelf:"flex-start" }}>
+          <Typography.Title level={2} style={{ width: "80%" }}>
             {" "}
             Biểu đồ theo thời gian
           </Typography.Title>
@@ -285,13 +281,12 @@ const History = () => {
             style={{
               marginTop: "10px",
               marginLeft: "10px",
-              width: "99%",
+              width: "80%",
               minWidth: "300px",
               boxShadow: "rgb(0 0 0 / 35%) 0px 5px 15px",
               padding: "40px",
               borderRadius: "40px",
               background: "white",
-              alignSelf: "flex-start"
             }}
           >
             <Line
@@ -324,8 +319,10 @@ const History = () => {
           <Typography.Title
             level={2}
             style={{
+              width: "80%",
               marginTop: "4rem",
-              alignSelf: "flex-start"
+              display: "flex",
+              justifyContent: "space-between",
             }}
           >
             {" "}
@@ -336,7 +333,7 @@ const History = () => {
               }}
             /> */}
           </Typography.Title>
-          <div style={{ marginTop: "30px", width: "95%" }}>
+          <div style={{ marginTop: "30px", marginLeft: "10px", width: "85%" }}>
             <Card
               style={{
                 boxShadow: "rgb(0 0 0 / 35%) 0px 5px 15px",
@@ -442,7 +439,7 @@ const History = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {record.map((item, index) => (
+              {record?.map((item, index) => (
                 <TableRow
                   key={index}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}

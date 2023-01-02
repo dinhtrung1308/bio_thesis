@@ -10,12 +10,14 @@ import Signal from "./routes/Signal/signal";
 import History from "./routes/History/history";
 import Relatives from "./routes/Relatives/relatives";
 import SignUp from "./routes/SignUp/signup";
+import Detail from "./routes/Detail/detail";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<Login />} />
+      <Route path="/detail" element={<Detail />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/signal" element={<Signal />} />
       <Route path="/history" element={<History />} />

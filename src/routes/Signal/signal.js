@@ -1,15 +1,8 @@
-import bluetoothIcon from "../../assets/img/bluetoothicon.svg";
 import logo from "../../assets/img/logo.png";
 import {
-  ContainerOutlined,
   ReconciliationOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   PieChartOutlined,
   UsergroupAddOutlined,
-  SwapOutlined,
-  RightOutlined,
-  LeftOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
 import {
@@ -25,6 +18,7 @@ import {
   HeartFilled,
   InfoCircleFilled,
   ExclamationCircleOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
 import "./signal.css";
@@ -101,7 +95,7 @@ let options = {
   optionalServices: ["battery_service"],
 };
 async function createAnalyzeObject(obj) {
-  return fetch(PREDICT_API, {
+  return fetch(`${PREDICT_API}`, {
     method: "POST",
     headers: {
       // Authorization: `Bearer ${token}`,
@@ -267,6 +261,12 @@ const Signal = () => {
           </div>
 
           <div className="bottom-content">
+            <NavLink to="/detail" className="link logout">
+              <div className="icon">
+                <SettingOutlined />
+              </div>
+              <div className="text">Log Out</div>
+            </NavLink>
             <NavLink to="/" className="link logout">
               <div className="icon">
                 <LogoutOutlined />
@@ -466,6 +466,12 @@ const Signal = () => {
               type="primary"
               size="small"
               onClick={() => {
+                // setRecord({
+                //   dia: data.Signal1,
+                //   sys: data.Signal2,
+                //   heartRate: data.Signal3,
+                //   insertAt: new Date(),
+                // });
                 saveRecord(data);
               }}
             >
@@ -474,10 +480,10 @@ const Signal = () => {
           </div>
         )}
         {width >= 750 && (
-          <Row style={{ padding: "2rem 5rem 0 10rem" }}>
-            {/* <Col xs={24} sm={24} md={24} lg={24}>
+          <Row style={{ marginBottom: "40px", padding: "4rem 10rem" }}>
+            <Col xs={24} sm={24} md={24} lg={24}>
               <Typography.Title level={2}> Hồ sơ cá nhân</Typography.Title>
-            </Col> */}
+            </Col>
             <Col xs={12} sm={12} md={24} lg={24}>
               <Card
                 bordered={true}
@@ -509,19 +515,18 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography style={{ fontSize: 20 , color: "rgba(31, 103, 177, 1)"}}>Tuổi :</Typography>
-                      <label className="input-field">
-                        <input
-                          name="age"
-                          type="number"
-                          value={age}
-                          onChange={(e) => setAge(e.target.value)}
-                          required
-                        />
-                        <span className="placeholder">Vui lòng nhập số tuổi</span>
-                        <span className="border"></span>
-                      </label>
-
+                      <Typography style={{ fontSize: 20 }}>Tuổi :</Typography>
+                      <Input
+                        placeholder="Vui lòng nhập tuổi"
+                        name="age"
+                        type="number"
+                        value={age}
+                        onChange={(e) => setAge(e.target.value)}
+                        style={{
+                          width: 180,
+                        }}
+                        required
+                      />
                     </div>
                     <div
                       style={{
@@ -531,27 +536,23 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography style={{ fontSize: 20, color: "rgba(31, 103, 177, 1)" }}>
+                      <Typography style={{ fontSize: 20 }}>
                         Giới tính :
                       </Typography>
-                      <select
+                      <Select
                         defaultValue=""
                         style={{
-                          background: "rgba(128, 128, 128, 0.1)",
-                          color: "rgba(0, 0, 0, 0.25)",
-                          outline: "none",
                           width: 180,
                         }}
                         onChange={handleChangeGender}
                         required
                       >
-                        <option value="" 
-                        disabled selected hidden>
+                        <Option value="" disabled selected hidden>
                           Chọn Giới Tính
-                        </option>
-                        <option value="1">Nam</option>
-                        <option value="0">Nữ</option>
-                      </select>
+                        </Option>
+                        <Option value="1">Nam</Option>
+                        <Option value="0">Nữ</Option>
+                      </Select>
                     </div>
                     <div
                       style={{
@@ -561,20 +562,20 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography style={{ fontSize: 20, color: "rgba(31, 103, 177, 1)"}}>
+                      <Typography style={{ fontSize: 20 }}>
                         Chiều cao :
                       </Typography>
-                      <label className="input-field">
-                        <input
-                          name="hei"
-                          type="number"
-                          value={hei}
-                          onChange={(e) => setHei(e.target.value)}
-                          required
-                        />
-                        <span className="placeholder">Vui lòng nhập chiều cao</span>
-                        <span className="border"></span>
-                      </label>
+                      <Input
+                        placeholder="Vui lòng nhập chiều cao"
+                        name="hei"
+                        type="number"
+                        value={hei}
+                        onChange={(e) => setHei(e.target.value)}
+                        style={{
+                          width: 180,
+                        }}
+                        required
+                      />
                     </div>
                     <div
                       style={{
@@ -584,20 +585,20 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography style={{ fontSize: 20, color: "rgba(31, 103, 177, 1)" }}>
+                      <Typography style={{ fontSize: 20 }}>
                         Cân nặng :
                       </Typography>
-                      <label className="input-field">
-                        <input
-                          name="weight"
-                          type="number"
-                          value={weight}
-                          onChange={(e) => setWeight(e.target.value)}
-                          required
-                        />
-                        <span className="placeholder">Vui lòng nhập cân nặng</span>
-                        <span className="border"></span>
-                      </label>
+                      <Input
+                        placeholder="Vui lòng nhập cân nặng"
+                        name="weight"
+                        type="number"
+                        value={weight}
+                        onChange={(e) => setWeight(e.target.value)}
+                        style={{
+                          width: 180,
+                        }}
+                        required
+                      />
                     </div>
                     <div
                       style={{
@@ -607,20 +608,20 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography style={{ fontSize: 20, fontWeight: "bold", color: "rgba(31, 103, 177, 1)" }}>
+                      <Typography style={{ fontSize: 20, fontWeight: "bold" }}>
                         SYS :
                       </Typography>
-                      <label className="input-field">
-                        <input
-                          name="sys"
-                          type="number"
-                          value={sys}
-                          onChange={(e) => setSys(e.target.value)}
-                          required
-                        />
-                        <span className="placeholder">Vui lòng nhập sys</span>
-                        <span className="border"></span>
-                      </label>
+                      <Input
+                        placeholder="Vui lòng nhập sys"
+                        name="sys"
+                        type="number"
+                        value={sys}
+                        onChange={(e) => setSys(e.target.value)}
+                        style={{
+                          width: 180,
+                        }}
+                        required
+                      />
                     </div>
                     <div
                       style={{
@@ -630,20 +631,20 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography style={{ fontSize: 20, fontWeight: "bold", color: "rgba(31, 103, 177, 1)" }}>
+                      <Typography style={{ fontSize: 20, fontWeight: "bold" }}>
                         DIA :
                       </Typography>
-                      <label className="input-field">
-                        <input
-                          name="dia"
-                          value={dia}
-                          onChange={(e) => setDia(e.target.value)}
-                          type="number"
-                          required
-                        />
-                        <span className="placeholder">Vui lòng nhập dia</span>
-                        <span className="border"></span>
-                      </label>
+                      <Input
+                        placeholder="Vui lòng nhập dia"
+                        name="dia"
+                        value={dia}
+                        onChange={(e) => setDia(e.target.value)}
+                        type="number"
+                        style={{
+                          width: 180,
+                        }}
+                        required
+                      />
                     </div>
                     <div
                       style={{
@@ -653,42 +654,78 @@ const Signal = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography style={{ fontSize: 20, fontWeight: "bold", color: "rgba(31, 103, 177, 1)" }}>
+                      <Typography style={{ fontSize: 20, fontWeight: "bold" }}>
                         Nhịp tim :
                       </Typography>
-                      <label className="input-field">
-                        <input
-                          name="heartrate"
-                          value={heartrate}
-                          onChange={(e) => setHeartrate(e.target.value)}
-                          type="number"
-                          required
-                        />
-                        <span className="placeholder">Vui lòng nhập nhịp tim</span>
-                        <span className="border"></span>
-                      </label>
+                      <Input
+                        placeholder="Vui lòng nhập nhịp tim"
+                        name="heartrate"
+                        value={heartrate}
+                        onChange={(e) => setHeartrate(e.target.value)}
+                        type="number"
+                        style={{
+                          width: 180,
+                        }}
+                        required
+                      />
                     </div>
+                    {/* <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "30px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography>Tình trạng :</Typography>
+
+                      <Select
+                        defaultValue="normal"
+                        style={{
+                          width: 180,
+                        }}
+                        onChange={handleChange}
+                      >
+                        <Option value="normal">Bình Thường</Option>
+                        <Option value="good">Tốt</Option>
+                        <Option value="bad">Không Khỏe</Option>
+                        <Option value="stressed">Căng Thẳng</Option>
+                        <Option value="troubleeating">Khó Ăn</Option>
+                        <Option value="drunk">Say Xỉn</Option>
+                        <Option value="smoked">Hút Thuốc</Option>
+                      </Select>
+                    </div> */}
                   </div>
                   <div
                     style={{
                       display: "flex",
                       flexDirection: "column",
-                      alignItems: "center",
                       gap: 40,
                     }}
                   >
-                    <Typography.Title level={1}> Hồ sơ cá nhân</Typography.Title>
                     <Image width={300} src={informationImage} />
-                    <button 
-                      className="diagnose-btn"
+                    <Button
+                      size="large"
+                      style={{
+                        height: 60,
+                        borderRadius: "40px",
+                        color: "#1890ff",
+                        borderColor: "#1890ff",
+                        fontSize: 28,
+                      }}
                       onClick={handleAnalyze}
                     >
-                      Chuẩn đoán
-                    </button>
+                      Chẩn đoán
+                    </Button>
                   </div>
                 </div>
               </Card>
             </Col>
+            {/* <Col xs={24} sm={24} md={24} lg={24}>
+              <Typography.Title level={2}> Thông số</Typography.Title>
+            </Col> */}
+
+            {/* <Col xs={1} sm={1} md={1} lg={1}></Col> */}
           </Row>
         )}
       </div>

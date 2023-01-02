@@ -42,6 +42,7 @@ function Login() {
     );
 
     const result = await getDocs(q);
+    const savedData = result.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
     if (!result.docs.length) {
       toast.error("Login Failed!", { autoClose: 1000 });
     } else {

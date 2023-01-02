@@ -1,0 +1,6 @@
+[[redirects]]
+  from = "/api/predict"
+  to = "http://13.229.10.208:5000"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
