@@ -497,7 +497,7 @@ const Signal = () => {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "space-around",
+                    justifyContent: "space-evenly",
                   }}
                 >
                   <div
@@ -511,8 +511,9 @@ const Signal = () => {
                       style={{
                         display: "flex",
                         flexDirection: "row",
-                        gap: "68px",
+                        justifyContent: "space-between",
                         alignItems: "center",
+                        gap: "100px",
                       }}
                     >
                       <Typography style={{ fontSize: 20 }}>Tuổi :</Typography>
@@ -559,7 +560,6 @@ const Signal = () => {
                         display: "flex",
                         flexDirection: "row",
                         justifyContent: "space-between",
-                        alignItems: "center",
                       }}
                     >
                       <Typography style={{ fontSize: 20 }}>
@@ -628,7 +628,6 @@ const Signal = () => {
                         display: "flex",
                         flexDirection: "row",
                         justifyContent: "space-between",
-                        alignItems: "center",
                       }}
                     >
                       <Typography style={{ fontSize: 20, fontWeight: "bold" }}>
@@ -651,7 +650,6 @@ const Signal = () => {
                         display: "flex",
                         flexDirection: "row",
                         justifyContent: "space-between",
-                        alignItems: "center",
                       }}
                     >
                       <Typography style={{ fontSize: 20, fontWeight: "bold" }}>
@@ -696,6 +694,107 @@ const Signal = () => {
                       </Select>
                     </div> */}
                   </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "40px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        alignSelf: "flex-start",
+                      }}
+                    >
+                      <Typography style={{fontWeight: "thin" }}>
+                        &nbsp;
+                      </Typography>
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography style={{fontWeight: "thin" }}>
+                        &nbsp;
+                      </Typography>
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        alignSelf: "flex-start",
+                      }}
+                    >
+                      <Typography style={{fontWeight: "thin" }}>
+                        cm
+                      </Typography>
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography style={{fontWeight: "thin" }}>
+                        kg
+                      </Typography>
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography style={{fontWeight: "thin" }}>
+                        mmHg
+                      </Typography>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography style={{fontWeight: "thin" }}>
+                        mmHg
+                      </Typography>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography style={{fontWeight: "thin" }}>
+                        bpm
+                      </Typography>
+                    </div>
+                  </div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
                   <div
                     style={{
                       display: "flex",
