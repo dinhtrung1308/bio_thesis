@@ -167,11 +167,11 @@ const Detail = () => {
           </div>
 
           <div className="bottom-content">
-            <NavLink to="/detail" className="link logout">
+            <NavLink to="/detail" className="link">
               <div className="icon">
                 <SettingOutlined />
               </div>
-              <div className="text">Log Out</div>
+              <div className="text">Setting</div>
             </NavLink>
             <NavLink to="/" className="link logout">
               <div className="icon">

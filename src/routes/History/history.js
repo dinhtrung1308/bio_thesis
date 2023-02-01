@@ -6,6 +6,7 @@ import {
   PieChartOutlined,
   UsergroupAddOutlined,
   LogoutOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import logo from "../../assets/img/logo.png";
 import { Button, Menu } from "antd";
@@ -242,6 +243,12 @@ const History = () => {
           </div>
 
           <div className="bottom-content">
+            <NavLink to="/detail" className="link">
+              <div className="icon">
+                <SettingOutlined />
+              </div>
+              <div className="text">Setting</div>
+            </NavLink>
             <NavLink to="/" className="link logout">
               <div className="icon">
                 <LogoutOutlined />
