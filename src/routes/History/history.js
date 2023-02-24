@@ -6,7 +6,6 @@ import {
   PieChartOutlined,
   UsergroupAddOutlined,
   LogoutOutlined,
-  SettingOutlined,
 } from "@ant-design/icons";
 import logo from "../../assets/img/logo.png";
 import { Button, Menu } from "antd";
@@ -76,9 +75,9 @@ function convertArrayToDays(data) {
   let labels = [];
 
   for (let i = 0; i < data.length; i++) {
-    labels.push(moment.unix(data[i]?.insert_at.seconds).format("HH:mm:ss"));
+    labels.push(moment.unix(data[i]?.insert_at.seconds).format("DD/MM HH:mm:ss"));
   }
-  return labels;
+  return labels.reverse();
 }
 function convertArrayToSYS(data) {
   let sys = [];
@@ -86,7 +85,7 @@ function convertArrayToSYS(data) {
   for (let i = 0; i < data.length; i++) {
     sys.push(data[i].sys);
   }
-  return sys;
+  return sys.reverse();
 }
 function convertArrayToDIA(data) {
   let dia = [];
@@ -94,7 +93,7 @@ function convertArrayToDIA(data) {
   for (let i = 0; i < data.length; i++) {
     dia.push(data[i].dia);
   }
-  return dia;
+  return dia.reverse();
 }
 function convertArrayToHeartRate(data) {
   let heart_rate = [];
@@ -102,7 +101,7 @@ function convertArrayToHeartRate(data) {
   for (let i = 0; i < data.length; i++) {
     heart_rate.push(data[i].heart_rate);
   }
-  return heart_rate;
+  return heart_rate.reverse();
 }
 function calculateAverageSYS(data) {
   let sum = 0;
@@ -134,17 +133,17 @@ function calculateAverageHeartRate(data) {
 
 const menuItems = [
   {
-    text: "Dashboard",
+    text: "Chẩn đoán",
     path: "/signal",
     icon: <PieChartOutlined />,
   },
   {
-    text: "History",
+    text: "Lịch sử",
     path: "/history",
     icon: <ReconciliationOutlined />,
   },
   {
-    text: "Relatives",
+    text: "Người thân",
     path: "/relatives",
     icon: <UsergroupAddOutlined />,
   },
@@ -168,12 +167,19 @@ const History = () => {
   const [open, setOpen] = useState(false);
   let navigate = useNavigate();
   const historyCollectionRef = collection(db2, "history");
+  const user = JSON.parse(sessionStorage.getItem("account"));
+
   const q = query(
     historyCollectionRef,
     where(
+      "uid",
+      "==",
+      user.username,
+    ),
+    where(
       "insert_at",
       ">=",
-      new Date(`${currentYear}-${currentMonth}-${currentDay}`)
+      new Date(`${currentYear}-${currentMonth}-${parseInt(currentDay) - 7}`)
     ),
     where(
       "insert_at",
@@ -186,7 +192,6 @@ const History = () => {
   useEffect(() => {
     const getUsers = async () => {
       const data = await getDocs(q);
-      console.log(data);
       setRecord(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })) || []);
     };
 
@@ -243,17 +248,11 @@ const History = () => {
           </div>
 
           <div className="bottom-content">
-            <NavLink to="/detail" className="link">
-              <div className="icon">
-                <SettingOutlined />
-              </div>
-              <div className="text">Setting</div>
-            </NavLink>
             <NavLink to="/" className="link logout">
               <div className="icon">
                 <LogoutOutlined />
               </div>
-              <div className="text">Log Out</div>
+              <div className="text">Thoát</div>
             </NavLink>
           </div>
         </div>
@@ -452,13 +451,13 @@ const History = () => {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {moment.unix(item.insert_at.seconds).format("HH:mm:ss")}
+                    {moment.unix(item.insert_at.seconds).format("DD/MM/YYYY HH:mm:ss")}
                   </TableCell>
                   <TableCell align="right">{item.heart_rate}</TableCell>
                   <TableCell align="right">{item.sys}</TableCell>
                   <TableCell align="right">{item.dia}</TableCell>
                   <TableCell align="right">
-                    {checkCondition(item.sys, item.dia)}
+                    {item.condition}
                   </TableCell>
                 </TableRow>
               ))}

@@ -43,15 +43,16 @@ function Login() {
 
     const result = await getDocs(q);
     const savedData = result.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+    sessionStorage.setItem("account", JSON.stringify(savedData[0]));
     if (!result.docs.length) {
       toast.error("Login Failed!", { autoClose: 1000 });
     } else {
       toast.success("Login Successful!", { autoClose: 1000 });
-      navigate("signal");
+      navigate("detail");
     }
   };
   function navigateToDetail() {
-    navigate("signal");
+    navigate("detail");
   }
   function navigateToSignUp() {
     navigate("signup");

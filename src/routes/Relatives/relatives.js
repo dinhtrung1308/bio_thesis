@@ -43,6 +43,8 @@ import { ToastContainer, toast } from "react-toastify";
 import { db, db2 } from "../../firebase-config.js";
 
 import { NavLink, useNavigate } from "react-router-dom";
+import { EditText, EditTextarea } from "react-edit-text";
+import "react-edit-text/dist/index.css";
 
 Chart.register(...registerables);
 toast.configure();
@@ -136,17 +138,17 @@ function calculateAverageHeartRate(data) {
 
 const menuItems = [
   {
-    text: "Dashboard",
+    text: "Chẩn đoán",
     path: "/signal",
     icon: <PieChartOutlined />,
   },
   {
-    text: "History",
+    text: "Lịch sử",
     path: "/history",
     icon: <ReconciliationOutlined />,
   },
   {
-    text: "Relatives",
+    text: "Người thân",
     path: "/relatives",
     icon: <UsergroupAddOutlined />,
   },
@@ -169,12 +171,41 @@ const Relatives = () => {
   const [record, setRecord] = useState([]);
   const [friendsRecord, setFriendsRecord] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRelativeModalOpen, setIsRelativeModalOpen] = useState(false);
+  const [historyMeasurement, setHistoryMeasurement] = useState([]);
+  const [modalData, setModalData] = useState({});
+  const [nickname, setNickname] = useState('');
 
   let navigate = useNavigate();
   const historyCollectionRef = collection(db2, "friends");
   const user = JSON.parse(sessionStorage.getItem("account"));
-  const q = query(historyCollectionRef, where("user_id", "==", user.username));
+  const q = query(historyCollectionRef, where("user_id", "==", user?.username));
+  const history = collection(db2, "history");
 
+  const historyQuery = query(
+    history,
+    where(
+      "insert_at",
+      ">=",
+      new Date(`${currentYear}-${currentMonth}-${currentDay}`)
+    ),
+    where(
+      "insert_at",
+      "<=",
+      new Date(`${currentYear}-${currentMonth}-${parseInt(currentDay) + 1}`)
+    ),
+    orderBy("insert_at", "desc")
+  );
+
+  useEffect(() => {
+    const getMeasurements = async () => {
+      const data = await getDocs(historyQuery);
+      setHistoryMeasurement(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })) || []);
+    };
+
+    getMeasurements();
+  }, []);
+  
   useEffect(() => {
     const getUsers = async () => {
       const data = await getDocs(q);
@@ -186,6 +217,39 @@ const Relatives = () => {
 
   const showModalAddFriends = () => {
     setIsModalOpen(true);
+  };
+  const handleCloseRelativeDetail = () => {
+    setIsRelativeModalOpen(false);
+  };
+
+  const calculateAverage = (data, properties) =>{
+    let sums = {};
+  for (let property of properties) {
+    sums[property] = 0;
+  }
+
+  for (let i = 0; i < data.length; i++) {
+    for (let property of properties) {
+      sums[property] += Number(data[i][property]);
+    }
+  }
+
+  let avg = {};
+  for (let property of properties) {
+    avg[property] = sums[property] / data.length;
+  }
+
+  return avg;
+  };
+
+  const handleOpenRelativeDetail = (e,relativeId, nickname) => {
+    setNickname(nickname);
+    const filterData = historyMeasurement?.filter(x => x.uid === relativeId);
+    const averageData = filterData.length !== 0 ? calculateAverage(filterData, ['sys','dia','heart_rate']) : {};
+
+    setModalData(() => averageData);
+
+    setIsRelativeModalOpen(true);
   };
   const handleAddFriends = async () => {
     if (record.length) {
@@ -212,7 +276,23 @@ const Relatives = () => {
     const queryFriends = query(db, where("username", "==", value));
     const data = await getDocs(queryFriends);
     setRecord(() => data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    console.log(record);
+  };
+  const handleUpdateRole = (e, id) => {
+    // const user = JSON.parse(sessionStorage.getItem("account"));
+   
+    const docRef = doc(db2, "friends", id);
+
+    const data = {
+      role: e.value,
+    };
+
+    updateDoc(docRef, data)
+      .then((docRef) => {
+        toast.success("Chỉnh sửa mối quan hệ thành công!", { autoClose: 1000 });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -262,7 +342,7 @@ const Relatives = () => {
               <div className="icon">
                 <LogoutOutlined />
               </div>
-              <div className="text">Log Out</div>
+              <div className="text">Thoát</div>
             </NavLink>
           </div>
         </div>
@@ -316,10 +396,10 @@ const Relatives = () => {
               marginTop: 20,
             }}
           >
-            {!!friendsRecord.length &&
-              friendsRecord.map((item) => (
+            {!!friendsRecord?.length &&
+              friendsRecord?.map((item) => (
                 <div
-                  key={item.phone_number}
+                  key={item.id}
                   style={{
                     marginBottom: "95px",
                     // marginLeft: "10px",
@@ -335,6 +415,7 @@ const Relatives = () => {
                     justifyContent: "flex-start",
                     gap: 20,
                   }}
+                  onClick={(e) => handleOpenRelativeDetail(e,item.phone_number, item.nickname.charAt(0).toUpperCase())}
                 >
                   <Avatar
                     size={90}
@@ -344,7 +425,7 @@ const Relatives = () => {
                       fontSize: 40,
                     }}
                   >
-                    U
+                    {item.nickname.charAt(0).toUpperCase()}
                   </Avatar>
                   <div>
                     <div
@@ -388,13 +469,23 @@ const Relatives = () => {
                       >
                         Mối quan hệ:
                       </Typography>
-                      <Typography
+                      {/* <Typography
                         style={{
                           fontSize: 16,
                         }}
                       >
                         {item.role}
-                      </Typography>
+                      </Typography> */}
+                      <div onClick={(e) => e.stopPropagation()}>
+                      <EditText
+                        style={{ fontSize: 16, margin: 0, padding: 0 }}
+                        name="role"
+                        defaultValue={item.role}
+                        // value={height || "Mặc định"}
+                        // onChange={(e) => setHeight(e.target.value)}
+                        onSave={(e) => handleUpdateRole(e, item.id)}
+                      />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -437,9 +528,9 @@ const Relatives = () => {
                       }}
                     >
                       <TableCell component="th" scope="row">
-                        {record[0].username}
+                        {record[0]?.username}
                       </TableCell>
-                      <TableCell align="right">{record[0].email}</TableCell>
+                      <TableCell align="right">{record[0]?.email}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -451,6 +542,120 @@ const Relatives = () => {
             </div>
           )}
         </div>
+      </Modal>
+      <Modal
+        title="20/02/2023"
+        open={isRelativeModalOpen}
+        footer={null}
+        onCancel={handleCloseRelativeDetail}
+      >
+        {Object.keys(modalData).length === 0  ? (
+          <div>
+          <Typography>Không có dữ liệu người dùng</Typography>
+          </div>
+        ) : (<div
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            gap: 40,
+            alignItems: "center",
+          }}
+        >
+          <Avatar
+            size={90}
+            style={{
+              color: "#f56a00",
+              backgroundColor: "#fde3cf",
+              fontSize: 40,
+            }}
+          >
+            {nickname}
+          </Avatar>
+          <div>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <Typography
+                style={{
+                  fontWeight: "bold",
+                  width: 150,
+                  fontSize: 16,
+                }}
+              >
+                SYS:
+              </Typography>
+              <Typography
+                style={{
+                  fontWeight: "bold",
+                  width: 200,
+                  fontSize: 16,
+                }}
+              >
+                {Math.round(modalData.sys)}
+              </Typography>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <Typography
+                style={{
+                  fontWeight: "bold",
+                  width: 150,
+                  fontSize: 16,
+                }}
+              >
+                DIA:
+              </Typography>
+              <Typography
+                style={{
+                  fontWeight: "bold",
+                  width: 200,
+                  fontSize: 16,
+                }}
+              >
+                {Math.round(modalData.dia)}
+              </Typography>
+            </div>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <Typography
+                style={{
+                  fontWeight: "bold",
+                  width: 150,
+                  fontSize: 16,
+                }}
+              >
+                Nhịp tim:
+              </Typography>
+              <Typography
+                style={{
+                  fontWeight: "bold",
+                  width: 200,
+                  fontSize: 16,
+                }}
+              >
+                {Math.round(modalData.heart_rate)}
+              </Typography>
+            </div>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <Typography
+                style={{
+                  fontWeight: "bold",
+                  width: 150,
+                  fontSize: 16,
+                }}
+              >
+                Trạng thái:
+              </Typography>
+              <Typography
+                style={{
+                  fontWeight: "bold",
+                  width: 200,
+                  fontSize: 16,
+                }}
+              >
+                {checkCondition(Math.round(modalData.sys), Math.round(modalData.dia))}
+              </Typography>
+            </div>
+          </div>
+        </div>)}
+        
       </Modal>
     </div>
   );

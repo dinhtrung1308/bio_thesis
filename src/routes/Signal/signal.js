@@ -31,6 +31,8 @@ import {
   collection,
   getDocs,
   addDoc,
+  query,
+  where,
   updateDoc,
   deleteDoc,
   doc,
@@ -52,6 +54,21 @@ function checkCondition(sys, dia) {
   else if (sys <= 120 || dia <= 80) return "Huyết Áp Bình Thường";
   else if (sys > 120 || dia > 80) return " Cao Huyết Áp";
 }
+
+function convertEnglishName(value) {
+  switch (value) {
+    case "Normal":
+      return "Bình thường";
+    case "Prehypertension":
+      return "Tiền cao huyết áp";
+    case "Stage 1 hypertension":
+      return "Cao huyết áp I";
+    case "Stage 2 hypertension":
+      return "Cao huyết áp II";
+    default:
+      break;
+  }
+}
 function getItem(label, key, icon, children, type) {
   return {
     key,
@@ -68,17 +85,17 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const menuItems = [
   {
-    text: "Dashboard",
+    text: "Chẩn đoán",
     path: "/signal",
     icon: <PieChartOutlined />,
   },
   {
-    text: "History",
+    text: "Lịch sử",
     path: "/history",
     icon: <ReconciliationOutlined />,
   },
   {
-    text: "Relatives",
+    text: "Người thân",
     path: "/relatives",
     icon: <UsergroupAddOutlined />,
   },
@@ -101,6 +118,7 @@ async function createAnalyzeObject(obj) {
       // Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
+
     body: JSON.stringify(obj),
   }).then((response) => response.json());
   // .then((data) => {
@@ -122,6 +140,7 @@ const Signal = () => {
   const [heartrate, setHeartrate] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
   const [resultStatus, setResultStatus] = useState("");
+  const [detailData, setDetailData] = useState([]);
 
   const [isRender, setRender] = useState(false);
   const [record, setRecord] = useState({
@@ -138,7 +157,6 @@ const Signal = () => {
   });
   const { height, width } = useWindowDimensions();
   const handleChangeGender = (value) => {
-    console.log(value);
     setGender(value);
   };
   const isResult = sessionStorage.getItem("isResult");
@@ -161,6 +179,31 @@ const Signal = () => {
         setData(todoItems);
       }
     );
+  }, []);
+  useEffect(() => {
+    const user = JSON.parse(sessionStorage.getItem("account"));
+    const historyCollectionRef = collection(db2, "accounts");
+    const q = query(
+      historyCollectionRef,
+      where("username", "==", user.username)
+    );
+    const getUserDetail = async () => {
+      const data = await getDocs(q);
+      const tempData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      if (data) {
+        const gender =
+          tempData[0]?.gender.toLowerCase().replace(/ /g, "") === "nam"
+            ? "1"
+            : "0";
+        setAge(tempData[0]?.age);
+        setGender(gender);
+        setHei(tempData[0]?.height || "");
+        setWeight(tempData[0]?.weight || "");
+        setDetailData(tempData);
+        return;
+      }
+    };
+    getUserDetail();
   }, []);
 
   let activeLink = "link active";
@@ -195,7 +238,6 @@ const Signal = () => {
       dia,
       heartrate,
     });
-    console.log(analyzeObject);
     if (analyzeObject.disease !== null) {
       toast.success("Chẩn đoán thành công!", { autoClose: 1000 });
       setOpenDialog(true);
@@ -208,12 +250,15 @@ const Signal = () => {
     setOpenDialog(!openDialog);
   };
   const handleSaveStatus = async () => {
+    const user = JSON.parse(sessionStorage.getItem("account"));
+
     const result = await addDoc(historyCollectionRef, {
       dia: dia,
       sys: sys,
       heart_rate: heartrate,
-      condition: resultStatus,
+      condition: convertEnglishName(resultStatus),
       insert_at: new Date(),
+      uid: user.username,
     });
     toast.success("Lưu thành công!", { autoClose: 1000 });
     setOpenDialog(false);
@@ -261,17 +306,17 @@ const Signal = () => {
           </div>
 
           <div className="bottom-content">
-            <NavLink to="/detail" className="link">
+            <NavLink to="/detail" className="link logout">
               <div className="icon">
                 <SettingOutlined />
               </div>
-              <div className="text">Setting</div>
+              <div className="text">Cài đặt</div>
             </NavLink>
             <NavLink to="/" className="link logout">
               <div className="icon">
                 <LogoutOutlined />
               </div>
-              <div className="text">Log Out</div>
+              <div className="text">Thoát</div>
             </NavLink>
           </div>
         </div>
@@ -497,7 +542,7 @@ const Signal = () => {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "space-evenly",
+                    justifyContent: "space-around",
                   }}
                 >
                   <div
@@ -505,6 +550,7 @@ const Signal = () => {
                       display: "flex",
                       flexDirection: "column",
                       gap: "30px",
+                      width: "400px",
                     }}
                   >
                     <div
@@ -513,7 +559,6 @@ const Signal = () => {
                         flexDirection: "row",
                         justifyContent: "space-between",
                         alignItems: "center",
-                        gap: "100px",
                       }}
                     >
                       <Typography style={{ fontSize: 20 }}>Tuổi :</Typography>
@@ -541,7 +586,8 @@ const Signal = () => {
                         Giới tính :
                       </Typography>
                       <Select
-                        defaultValue=""
+                        // defaultValue={gender}
+                        value={gender}
                         style={{
                           width: 180,
                         }}
@@ -560,6 +606,7 @@ const Signal = () => {
                         display: "flex",
                         flexDirection: "row",
                         justifyContent: "space-between",
+                        alignItems: "center",
                       }}
                     >
                       <Typography style={{ fontSize: 20 }}>
@@ -574,6 +621,7 @@ const Signal = () => {
                         style={{
                           width: 180,
                         }}
+                        suffix="cm"
                         required
                       />
                     </div>
@@ -594,6 +642,7 @@ const Signal = () => {
                         type="number"
                         value={weight}
                         onChange={(e) => setWeight(e.target.value)}
+                        suffix="kg"
                         style={{
                           width: 180,
                         }}
@@ -617,8 +666,9 @@ const Signal = () => {
                         type="number"
                         value={sys}
                         onChange={(e) => setSys(e.target.value)}
+                        suffix="mmHg"
                         style={{
-                          width: 180,
+                          width: 260,
                         }}
                         required
                       />
@@ -628,6 +678,7 @@ const Signal = () => {
                         display: "flex",
                         flexDirection: "row",
                         justifyContent: "space-between",
+                        alignItems: "center",
                       }}
                     >
                       <Typography style={{ fontSize: 20, fontWeight: "bold" }}>
@@ -639,8 +690,9 @@ const Signal = () => {
                         value={dia}
                         onChange={(e) => setDia(e.target.value)}
                         type="number"
+                        suffix="mmHg"
                         style={{
-                          width: 180,
+                          width: 260,
                         }}
                         required
                       />
@@ -650,6 +702,7 @@ const Signal = () => {
                         display: "flex",
                         flexDirection: "row",
                         justifyContent: "space-between",
+                        alignItems: "center",
                       }}
                     >
                       <Typography style={{ fontSize: 20, fontWeight: "bold" }}>
@@ -661,8 +714,9 @@ const Signal = () => {
                         value={heartrate}
                         onChange={(e) => setHeartrate(e.target.value)}
                         type="number"
+                        suffix="nhịp/phút"
                         style={{
-                          width: 180,
+                          width: 260,
                         }}
                         required
                       />
@@ -694,107 +748,6 @@ const Signal = () => {
                       </Select>
                     </div> */}
                   </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "40px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        alignSelf: "flex-start",
-                      }}
-                    >
-                      <Typography style={{fontWeight: "thin" }}>
-                        &nbsp;
-                      </Typography>
-                    </div>
-
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography style={{fontWeight: "thin" }}>
-                        &nbsp;
-                      </Typography>
-                    </div>
-
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        alignSelf: "flex-start",
-                      }}
-                    >
-                      <Typography style={{fontWeight: "thin" }}>
-                        cm
-                      </Typography>
-                    </div>
-
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography style={{fontWeight: "thin" }}>
-                        kg
-                      </Typography>
-                    </div>
-
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography style={{fontWeight: "thin" }}>
-                        mmHg
-                      </Typography>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography style={{fontWeight: "thin" }}>
-                        mmHg
-                      </Typography>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography style={{fontWeight: "thin" }}>
-                        bpm
-                      </Typography>
-                    </div>
-                  </div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
                   <div
                     style={{
                       display: "flex",
@@ -838,7 +791,7 @@ const Signal = () => {
         <DialogTitle>{"Kết quả chẩn đoán"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            {resultStatus}
+            {convertEnglishName(resultStatus)}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

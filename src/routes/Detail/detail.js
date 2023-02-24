@@ -45,6 +45,8 @@ import Title from "antd/lib/skeleton/Title";
 import { ToastContainer, toast } from "react-toastify";
 import { PREDICT_API } from "../../api/index";
 import "react-toastify/dist/ReactToastify.css";
+import { EditText, EditTextarea } from "react-edit-text";
+import "react-edit-text/dist/index.css";
 
 toast.configure();
 const { Text, Link } = Typography;
@@ -70,26 +72,30 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const menuItems = [
   {
-    text: "Dashboard",
+    text: "Chẩn đoán",
     path: "/signal",
     icon: <PieChartOutlined />,
   },
   {
-    text: "History",
+    text: "Lịch sử",
     path: "/history",
     icon: <ReconciliationOutlined />,
   },
   {
-    text: "Relatives",
+    text: "Người thân",
     path: "/relatives",
     icon: <UsergroupAddOutlined />,
   },
 ];
 
 const Detail = () => {
-  const [collapsed, setCollapsed] = useState(false);
-
   const [details, setDetails] = useState([]);
+
+  const [collapsed, setCollapsed] = useState(false);
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
 
   let navigate = useNavigate();
 
@@ -103,6 +109,26 @@ const Detail = () => {
       navigate("/relatives");
     }
   }
+  const handleUpdateDetail = () => {
+    const user = JSON.parse(sessionStorage.getItem("account"));
+
+    const docRef = doc(db2, "accounts", user.id);
+
+    const data = {
+      age: age || "",
+      height: height || "",
+      weight: weight || "",
+      gender: gender || "",
+    };
+
+    updateDoc(docRef, data)
+      .then((docRef) => {
+        toast.success("Chỉnh sửa thông tin thành công!", { autoClose: 1000 });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   useEffect(() => {
     const user = JSON.parse(sessionStorage.getItem("account"));
@@ -113,10 +139,15 @@ const Detail = () => {
     );
     const getUserDetail = async () => {
       const data = await getDocs(q);
-      const abc = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-      console.log(abc);
+      const tempData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      console.log(tempData);
       if (data) {
         setDetails(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        setAge(tempData[0]?.age || "");
+        setGender(tempData[0]?.gender || "");
+        setHeight(tempData[0]?.height || "");
+        setWeight(tempData[0]?.weight || "");
+
         return;
       }
       setDetails([]);
@@ -167,17 +198,17 @@ const Detail = () => {
           </div>
 
           <div className="bottom-content">
-            <NavLink to="/detail" className="link">
+            <NavLink to="/detail" className="link logout">
               <div className="icon">
                 <SettingOutlined />
               </div>
-              <div className="text">Setting</div>
+              <div className="text">Cài đặt</div>
             </NavLink>
             <NavLink to="/" className="link logout">
               <div className="icon">
                 <LogoutOutlined />
               </div>
-              <div className="text">Log Out</div>
+              <div className="text">Thoát</div>
             </NavLink>
           </div>
         </div>
@@ -266,9 +297,34 @@ const Detail = () => {
                     <Typography style={{ fontSize: 20, fontWeight: "bold" }}>
                       Chiều cao :
                     </Typography>
-                    <Typography style={{ fontSize: 20 }}>
+                    {/* <Typography style={{ fontSize: 20 }}>
                       {details[0]?.height || "Mặc định"}
-                    </Typography>
+                    </Typography> */}
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "4px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <EditText
+                        style={{ fontSize: 20 }}
+                        name="height"
+                        // defaultValue={"Mặc định"}
+                        value={height || "Mặc định"}
+                        onChange={(e) => setHeight(e.target.value)}
+                        onSave={handleUpdateDetail}
+                      />
+                      <span
+                        style={{
+                          fontSize: 20,
+                          fontWeight: "bold",
+                          color: "#23395d",
+                        }}
+                      >
+                        cm
+                      </span>
+                    </div>
                   </div>
                   <div
                     style={{
@@ -281,9 +337,30 @@ const Detail = () => {
                     <Typography style={{ fontSize: 20, fontWeight: "bold" }}>
                       Cân nặng :
                     </Typography>
-                    <Typography style={{ fontSize: 20 }}>
-                      {details[0]?.weight || "Mặc định"}
-                    </Typography>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "4px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <EditText
+                        style={{ fontSize: 20 }}
+                        name="weight"
+                        value={weight || "Mặc định"}
+                        onChange={(e) => setWeight(e.target.value)}
+                        onSave={handleUpdateDetail}
+                      />
+                      <span
+                        style={{
+                          fontSize: 20,
+                          fontWeight: "bold",
+                          color: "#23395d",
+                        }}
+                      >
+                        kg
+                      </span>
+                    </div>
                   </div>
                   <div
                     style={{
@@ -296,9 +373,13 @@ const Detail = () => {
                     <Typography style={{ fontSize: 20, fontWeight: "bold" }}>
                       Tuổi :
                     </Typography>
-                    <Typography style={{ fontSize: 20 }}>
-                      {details[0]?.age || "Mặc định"}
-                    </Typography>
+                    <EditText
+                      style={{ fontSize: 20 }}
+                      name="age"
+                      value={age || "Mặc định"}
+                      onChange={(e) => setAge(e.target.value)}
+                      onSave={handleUpdateDetail}
+                    />
                   </div>
                   <div
                     style={{
@@ -311,9 +392,13 @@ const Detail = () => {
                     <Typography style={{ fontSize: 20, fontWeight: "bold" }}>
                       Giới tính :
                     </Typography>
-                    <Typography style={{ fontSize: 20 }}>
-                      {details[0]?.gender || "Mặc định"}
-                    </Typography>
+                    <EditText
+                      style={{ fontSize: 20 }}
+                      name="gender"
+                      value={gender || "Mặc định"}
+                      onChange={(e) => setGender(e.target.value)}
+                      onSave={handleUpdateDetail}
+                    />
                   </div>
                 </div>
               </div>
